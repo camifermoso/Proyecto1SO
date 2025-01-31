@@ -8,16 +8,15 @@ package EDD;
  *
  * @author cristiandresgp
  */
-public class NodoDoble {
+public class Nodo {
     private Object element;
-    private NodoDoble next;
-    private NodoDoble previous;
-    
-    public NodoDoble(Object element) {
+    private Nodo next;
+
+    public Nodo(Object element) {
         this.element = element;
-        this.next = this.previous = null;
+        this.next = null;
     }
-    
+
     public Object getElement() {
         return element;
     }
@@ -26,23 +25,14 @@ public class NodoDoble {
         this.element = element;
     }
 
-    public NodoDoble getNext() {
+    public Nodo getNext() {
         return next;
     }
- 
-    public void setNext(NodoDoble next) {
+
+    public void setNext(Nodo next) {
         this.next = next;
     }
 
-    public NodoDoble getPrevious() {
-        return previous;
-    }
-
-    public void setPrevious(NodoDoble previous) {
-        this.previous = previous;
-    }
-    
-    
 }
-    
+
 
