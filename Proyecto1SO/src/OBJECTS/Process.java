@@ -6,7 +6,7 @@ package OBJECTS;
 
 /**
  *
- * @author cristiandresgp
+ * @author cristiandresgp hola
  */
 public class Process {
     public enum Priority { ALTA, MEDIA, BAJA } // Definir niveles de prioridad
