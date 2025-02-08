@@ -40,9 +40,6 @@ public class Scheduler {
                 return SchedulingAlgorithms.SRT(readyQueue, currentProcess);
             case "HRRN":
                 return SchedulingAlgorithms.HRRN(readyQueue, currentTime);
-            case "Feedback":
-                Queue[] queues = {readyQueue}; // Si usamos múltiples colas, cambiar
-                return SchedulingAlgorithms.Feedback(queues);
             default:
                 return null;
         }
