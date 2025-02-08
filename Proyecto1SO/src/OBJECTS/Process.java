@@ -6,10 +6,11 @@ package OBJECTS;
 
 /**
  *
- * @author cristiandresgp hola
+ * @author cristiandresgp 
  */
 public class Process {
     public enum Priority { ALTA, MEDIA, BAJA } // Definir niveles de prioridad
+    public enum ProcessState { READY, RUNNING, BLOCKED, TERMINATED }
 
     private int processID;
     private String name;
@@ -19,6 +20,9 @@ public class Process {
     private int exceptionCycle; // Cada cuántos ciclos genera una excepción
     private int exceptionDuration; // Cuántos ciclos tarda en resolverse
     private Priority priority;
+    private ProcessState state;
+    private int programCounter;
+    private int memoryAddressRegister;
 
     public Process(int processID, String name, int totalInstructions, boolean isCPUBound, 
                    int exceptionCycle, int exceptionDuration, Priority priority) {
@@ -30,11 +34,18 @@ public class Process {
         this.exceptionCycle = exceptionCycle;
         this.exceptionDuration = exceptionDuration;
         this.priority = priority;
+        this.state = ProcessState.READY;
+        this.programCounter = 0;
+        this.memoryAddressRegister = 0;
     }
 
     public void executeInstruction() {
         if (executedInstructions < totalInstructions) {
             executedInstructions++;
+            programCounter++;
+        }
+        if (executedInstructions >= totalInstructions) {
+            this.state = ProcessState.TERMINATED;
         }
     }
 
@@ -68,6 +79,30 @@ public class Process {
 
     public void setPriority(Priority priority) {
         this.priority = priority;
+    }
+    
+    public ProcessState getState() {
+        return state;
+    }
+
+    public void setState(ProcessState state) {
+        this.state = state;
+    }
+
+    public int getProgramCounter() {
+        return programCounter;
+    }
+
+    public void setProgramCounter(int programCounter) {
+        this.programCounter = programCounter;
+    }
+
+    public int getMemoryAddressRegister() {
+        return memoryAddressRegister;
+    }
+
+    public void setMemoryAddressRegister(int memoryAddressRegister) {
+        this.memoryAddressRegister = memoryAddressRegister;
     }
 }
 

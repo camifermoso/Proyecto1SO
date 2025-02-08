@@ -8,16 +8,12 @@ package GUI;
  *
  * @author cristiandresgp
  */
-public class GUI extends javax.swing.JFrame {
+public class Bienvenida extends javax.swing.JFrame {
 
     /**
-     * Creates new form GUII
+     * Creates new form Bienvenida
      */
-    public GUI() {
-        this.setVisible(true);
-        this.setSize(750,500);
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
+    public Bienvenida() {
         initComponents();
     }
 
@@ -31,14 +27,32 @@ public class GUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        botonTxt = new javax.swing.JButton();
+        botonSimulacion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setText("Proyecto 1 SO");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, -1, -1));
+        jLabel1.setText("SIMULACIÓN DE PLANIFICACIÓN DE PROCESOS");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 40, -1, -1));
+
+        botonTxt.setText("Cargar un txt");
+        botonTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonTxtActionPerformed(evt);
+            }
+        });
+        jPanel1.add(botonTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, -1, -1));
+
+        botonSimulacion.setText("Empezar simulación");
+        botonSimulacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonSimulacionActionPerformed(evt);
+            }
+        });
+        jPanel1.add(botonSimulacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 180, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -53,6 +67,16 @@ public class GUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botonTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTxtActionPerformed
+        FuncionesInterfaz.openCargartxt();
+        this.setVisible(false);
+    }//GEN-LAST:event_botonTxtActionPerformed
+
+    private void botonSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSimulacionActionPerformed
+        FuncionesInterfaz.openSimulacion();
+        this.setVisible(false);
+    }//GEN-LAST:event_botonSimulacionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -71,27 +95,28 @@ public class GUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Bienvenida.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Bienvenida.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Bienvenida.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Bienvenida.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI().setVisible(true);
+                new Bienvenida().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton botonSimulacion;
+    private javax.swing.JButton botonTxt;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

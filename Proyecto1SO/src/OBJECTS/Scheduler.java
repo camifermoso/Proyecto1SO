@@ -13,11 +13,13 @@ import EDD.Queue;
 
 public class Scheduler {
     private Queue readyQueue;
+    private Queue terminatedQueue;
     private String algorithm;
     private int quantum;
 
     public Scheduler(String algorithm, int quantum) {
         this.readyQueue = new Queue(); // Cola única de listos
+        this.terminatedQueue = new Queue(); // Cola de terminados
         this.algorithm = algorithm;
         this.quantum = quantum;
     }
@@ -29,23 +31,34 @@ public class Scheduler {
     public Process getNextProcess(Process currentProcess, int currentTime) {
         if (readyQueue.isEmpty()) return null;
 
+        Process nextProcess;
         switch (algorithm) {
             case "FCFS":
-                return SchedulingAlgorithms.FCFS(readyQueue);
+                nextProcess = SchedulingAlgorithms.FCFS(readyQueue);
+                break;
             case "RoundRobin":
-                return SchedulingAlgorithms.RoundRobin(readyQueue, quantum);
+                nextProcess = SchedulingAlgorithms.RoundRobin(readyQueue, quantum);
+                break;
             case "SPN":
-                return SchedulingAlgorithms.SPN(readyQueue);
+                nextProcess = SchedulingAlgorithms.SPN(readyQueue);
+                break;
             case "SRT":
-                return SchedulingAlgorithms.SRT(readyQueue, currentProcess);
+                nextProcess = SchedulingAlgorithms.SRT(readyQueue, currentProcess);
+                break;
             case "HRRN":
-                return SchedulingAlgorithms.HRRN(readyQueue, currentTime);
-            case "Feedback":
-                Queue[] queues = {readyQueue}; // Si usamos múltiples colas, cambiar
-                return SchedulingAlgorithms.Feedback(queues);
+                nextProcess = SchedulingAlgorithms.HRRN(readyQueue, currentTime);
+                break;
             default:
-                return null;
+                nextProcess = null;
         }
+        
+        if (nextProcess != null && nextProcess.isCompleted()) {
+            nextProcess.setState(Process.ProcessState.TERMINATED);
+            terminatedQueue.enqueue(nextProcess);
+            return getNextProcess(null, currentTime); // Obtener otro si el actual está terminado
+        }
+        
+        return nextProcess;
     }
 
     public void setAlgorithm(String algorithm) {
@@ -55,8 +68,12 @@ public class Scheduler {
     public String getAlgorithm() {
         return algorithm;
     }
-}
-
-// AGREGAR SchedulingAlgorithms EN FUNCTIONS (ALGORITMOS DE PLANIFICACION PERO HAY QUE SOLO ESCOGER 5 DE ESOS 6)
-
     
+    public Queue getReadyQueue() {
+        return readyQueue;
+    }
+    
+    public Queue getTerminatedQueue() {
+        return terminatedQueue;
+    }
+}
