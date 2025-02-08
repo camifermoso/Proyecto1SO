@@ -1,4 +1,5 @@
-/*
+
+^X^XXx66/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -15,10 +16,13 @@ import java.util.concurrent.Semaphore;
 public class Process implements Runnable{
     public enum Priority { ALTA, MEDIA, BAJA } // Definir niveles de prioridad
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     private static final Semaphore cpuSemaphore = new Semaphore(1);
     
 =======
+=======
+>>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
     public enum ProcessState { READY, RUNNING, BLOCKED, TERMINATED }
 
 >>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
@@ -31,7 +35,13 @@ public class Process implements Runnable{
     private int exceptionDuration; // Cuántos ciclos tarda en resolverse
     private Priority priority;
 <<<<<<< HEAD
+<<<<<<< HEAD
     private JTable table;
+=======
+    private ProcessState state;
+    private int programCounter;
+    private int memoryAddressRegister;
+>>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
 =======
     private ProcessState state;
     private int programCounter;
@@ -48,6 +58,7 @@ public class Process implements Runnable{
         this.exceptionCycle = exceptionCycle;
         this.exceptionDuration = exceptionDuration;
         this.priority = priority;
+<<<<<<< HEAD
 <<<<<<< HEAD
         this.table = table;
     }
@@ -79,15 +90,27 @@ public class Process implements Runnable{
         this.programCounter = 0;
         this.memoryAddressRegister = 0;
 >>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
+=======
+        this.state = ProcessState.READY;
+        this.programCounter = 0;
+        this.memoryAddressRegister = 0;
+>>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
     }
 
     public void executeInstruction() {
         if (executedInstructions < totalInstructions) {
             executedInstructions++;
 <<<<<<< HEAD
+<<<<<<< HEAD
             updateTable("Executing");
 =======
             programCounter++;
+=======
+            programCounter++;
+        }
+        if (executedInstructions >= totalInstructions) {
+            this.state = ProcessState.TERMINATED;
+>>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
         }
         if (executedInstructions >= totalInstructions) {
             this.state = ProcessState.TERMINATED;
