@@ -70,12 +70,12 @@ public class Bienvenida extends javax.swing.JFrame {
 
     private void botonTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTxtActionPerformed
         FuncionesInterfaz.openCargartxt();
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_botonTxtActionPerformed
 
     private void botonSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSimulacionActionPerformed
         FuncionesInterfaz.openSimulacion();
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_botonSimulacionActionPerformed
 
     /**
