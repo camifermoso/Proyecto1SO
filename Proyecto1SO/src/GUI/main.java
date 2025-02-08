@@ -10,7 +10,7 @@ package GUI;
  */
 public class main{
 public static void main(String[] args) {
-        GUI interfaz = new GUI();
+        Bienvenida interfaz = new Bienvenida();
         interfaz.setVisible(true);
  
     }

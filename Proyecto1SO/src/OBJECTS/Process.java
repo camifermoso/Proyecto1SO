@@ -10,13 +10,18 @@ import java.util.concurrent.Semaphore;
 
 /**
  *
- * @author cristiandresgp
+ * @author cristiandresgp 
  */
 public class Process implements Runnable{
     public enum Priority { ALTA, MEDIA, BAJA } // Definir niveles de prioridad
+<<<<<<< HEAD
     
     private static final Semaphore cpuSemaphore = new Semaphore(1);
     
+=======
+    public enum ProcessState { READY, RUNNING, BLOCKED, TERMINATED }
+
+>>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
     private int processID;
     private String name;
     private int totalInstructions;
@@ -25,7 +30,13 @@ public class Process implements Runnable{
     private int exceptionCycle; // Cada cuántos ciclos genera una excepción
     private int exceptionDuration; // Cuántos ciclos tarda en resolverse
     private Priority priority;
+<<<<<<< HEAD
     private JTable table;
+=======
+    private ProcessState state;
+    private int programCounter;
+    private int memoryAddressRegister;
+>>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
 
     public Process(int processID, String name, int totalInstructions, boolean isCPUBound, 
                    int exceptionCycle, int exceptionDuration, Priority priority, JTable table) {
@@ -37,6 +48,7 @@ public class Process implements Runnable{
         this.exceptionCycle = exceptionCycle;
         this.exceptionDuration = exceptionDuration;
         this.priority = priority;
+<<<<<<< HEAD
         this.table = table;
     }
 
@@ -62,12 +74,24 @@ public class Process implements Runnable{
             }
         }
         updateTable("Completed");
+=======
+        this.state = ProcessState.READY;
+        this.programCounter = 0;
+        this.memoryAddressRegister = 0;
+>>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
     }
 
     public void executeInstruction() {
         if (executedInstructions < totalInstructions) {
             executedInstructions++;
+<<<<<<< HEAD
             updateTable("Executing");
+=======
+            programCounter++;
+        }
+        if (executedInstructions >= totalInstructions) {
+            this.state = ProcessState.TERMINATED;
+>>>>>>> f826293505a601f85ddc40e917b27c0d9f2a7757
         }
     }
 
@@ -122,6 +146,30 @@ public class Process implements Runnable{
 
     public void setPriority(Priority priority) {
         this.priority = priority;
+    }
+    
+    public ProcessState getState() {
+        return state;
+    }
+
+    public void setState(ProcessState state) {
+        this.state = state;
+    }
+
+    public int getProgramCounter() {
+        return programCounter;
+    }
+
+    public void setProgramCounter(int programCounter) {
+        this.programCounter = programCounter;
+    }
+
+    public int getMemoryAddressRegister() {
+        return memoryAddressRegister;
+    }
+
+    public void setMemoryAddressRegister(int memoryAddressRegister) {
+        this.memoryAddressRegister = memoryAddressRegister;
     }
 }
 
