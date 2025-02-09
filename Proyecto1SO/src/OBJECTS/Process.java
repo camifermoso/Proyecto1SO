@@ -21,6 +21,7 @@ public class Process {
     private int exceptionDuration; // Cuántos ciclos tarda en resolverse
     private Priority priority;
     private ProcessState state;
+    private boolean executing = false; // Indica si un proceso esta siendo ejecutado por una CPU o no
     private int programCounter;
     private int memoryAddressRegister;
 
@@ -89,6 +90,14 @@ public class Process {
         this.state = state;
     }
 
+    public boolean isExecuting() {
+        return executing;
+    }
+
+    public void setExecuting(boolean executing) {
+        this.executing = executing;
+    }
+    
     public int getProgramCounter() {
         return programCounter;
     }
