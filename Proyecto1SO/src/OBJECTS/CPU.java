@@ -5,22 +5,26 @@
 package OBJECTS;
 
 import GUI.main;
+import GUI.Simulacion;
 import java.util.concurrent.Semaphore;
 
 public class CPU extends Thread {
     private final int cpuId;  // ID de CPU
     private Process currentProcess; // Proceso
     private boolean busy; // Estado de CPU
-    private Semaphore cpuSemaphore = new Semaphore(1); // Semaforo de exclusion mutua
-    private volatile boolean running; // Al iniciar la CPU siempre esta running
-    private Process process;
-
-    public CPU(int cpuId) {
+    private final Semaphore cpuSemaphore; // Semaforo de exclusion mutua
+    private volatile boolean running; // Al iniciar la CPU siempre esta running, este es el estado de ejecucion de la CPU
+    private final Scheduler scheduler;
+    private  Clock clock;
+    
+    public CPU(int cpuId, Scheduler scheduler, Clock clock) {
         this.cpuId = cpuId;
         this.currentProcess = null; // No se asigna ningun proceso inicialmente
         this.busy = true; // Al inicio esta activo
         this.running = true;
-        this.cpuSemaphore = cpuSemaphore;
+        this.cpuSemaphore = new Semaphore(1); //Inicializacion del semaforo
+        this.scheduler = scheduler;
+        this.clock = clock;
     }
     
     // Cuando se asigna un proceso distinto es necesario que se vean los cambios en la interfaz grafica
@@ -36,95 +40,72 @@ public class CPU extends Thread {
     }
 
     
-    //Run
+    //Ejecuta la logica de la CPU
     @Override
     public void run() {
-        while (busy) {
+        while (running) {
             try {
+                // Se adquiere el semáforo antes de acceder a la cola de listos
                 cpuSemaphore.acquire();
-                // Es necesario que busque en la cola de procesos listos el proceso a ejecutar
-                if (!main.readyQueue.isEmpty()) {
-                    // El proceso no puede estar ejecutandose en otro CPU
-                    process = main.readyQueue.searchNotExecuting();
-                    if (process != null) {
-                        process.setExecuting(true);
-                        System.out.println("CPU: " + cpuId + "esta ejecutando el proceso " + process.getName());
+                try {
+                    // Verifica si hay procesos en la cola de listos
+                    if (!scheduler.getReadyQueue().isEmpty()) {
+                        Process process = scheduler.getNextProcess(currentProcess, GUI.Simulacion.clock.getCurrentCycle());
+                        if (process != null && !process.isExecuting()) {
+                            process.setExecuting(true); // Evita que otros CPUs ejecuten el mismo proceso
+                            currentProcess = process;
+                            assignProcessInterfaceUpdate(process);
+                            System.out.println("CPU " + cpuId + " está ejecutando el proceso " + process.getName());
+                        }
+                    } else {
+                        System.out.println("CPU " + cpuId + ": La cola de procesos está vacía");
                     }
-                } else {
-                    System.out.println("CPU " + cpuId + ": La cola de procesos esta vacia");
+                } finally {
+                    cpuSemaphore.release(); // Libera el semáforo en cualquier caso
                 }
-                cpuSemaphore.release();
 
-                if (process != null) {
-                    runOS();
-                    ejecutarProceso();
+                // Ejecuta el proceso si hay uno asignado
+                if (currentProcess != null) {
+                    runProcess();
                 } else {
-                    Thread.sleep(1000);
+                    try {
+                        Thread.sleep(1000); // Espera si no hay procesos asignados
+                    } catch (InterruptedException e) {
+                        System.out.println("CPU " + cpuId + " fue interrumpida durante el sueño");
+                        Thread.currentThread().interrupt();
+                    }
                 }
             } catch (InterruptedException e) {
-                System.out.println("CPU " + cpuId + " fue interrumpida");
+                System.out.println("CPU " + cpuId + " fue interrumpida al intentar adquirir el semáforo");
                 Thread.currentThread().interrupt();
             }
         }
     }
     
-    //Run Operative System
-    
-    //Le faltan varios cambios
-    
-   
-//    private void runOS() throws InterruptedException {
-//        Process processOS = new Process("SO", 3, "CPU bound", 0, 0);
-//        processOS.setprocessID(0);
-//        processOS.setState("RUNNING");
-//        assignProcessInterfaceUpdate(processOS);
-//
-//        System.out.println("CPU " + cpuId + " ejecutando el SO por 3 ciclos...");
-//        for (int i = 0; i < 3; i++) {
-//            int duracionCiclo = main.mainWindow.getCicloDuracion();
-//            Thread.sleep(duracionCiclo * 1000L);
-//            processOS.setProgramCounter(processOS.getProgramCounter() + 1);
-//            processOS.setMemoryAddressRegister(processOS.getMemoryAddressRegister() + 1);
-//            assignProcessInterfaceUpdate(processOS);
-//        }
-//        terminateProcessInterfaceUpdate();
-//    }
-    
-    // Esto le falta las politicas de planificacion
-//    private void ejecutarProceso() throws InterruptedException {
-//        process.setState("RUNNING");
-//        main.readyQueue.remove(process);
-//        process.setExecuting(false);
-//        setProcess(process);
-//
-//        int duracionCiclo = main.mainWindow.getCicloDuracion();
-//        switch (MainClass.politicaActual) {
-//            case "Round Robin":
-//                runRoundRobin(duracionCiclo);
-//                break;
-//            case "SRT":
-//                runSRT(duracionCiclo);
-//                break;
-//            default:
-//                runDefault(duracionCiclo);
-//                break;
-//        }
-//    }
-    
-    
-    //este execute cycle le faltan unos cambios
-//    private void executeCycle() {
-//        if (currentProcess == null || currentProcess.getState() == Process.ProcessState.BLOCKED) {
-//            return;
-//        }
-//
-//        currentProcess.executeInstruction();
-//
-//        if (currentProcess.isCompleted()) {
-//            terminateProcessInterfaceUpdate();
-//        }
-//    }
-    
+    // Ejecuta el proceso actual
+    private void runProcess() {
+        try {
+            currentProcess.setState("RUNNING");
+            assignProcessInterfaceUpdate(currentProcess);
+
+            int cycleDuration = GUI.Simulacion.clock.getCurrentCycle();
+            Thread.sleep(cycleDuration * 1000L);  // Simula la ejecución de instrucciones
+
+            currentProcess.setProgramCounter(currentProcess.getProgramCounter() + 1);
+            currentProcess.setMemoryAddressRegister(currentProcess.getMemoryAddressRegister() + 1);
+            assignProcessInterfaceUpdate(currentProcess);
+
+            // Verifica si el proceso ha terminado
+            if (currentProcess.isCompleted()) {
+                scheduler.getTerminatedQueue().enqueue(currentProcess);
+                terminateProcessInterfaceUpdate();
+                currentProcess = null;
+            }
+        } catch (InterruptedException e) {
+            System.out.println("CPU " + cpuId + " fue interrumpida mientras ejecutaba el proceso");
+            Thread.currentThread().interrupt();
+        }
+    }  
     // Cuando se termina un proceso es necesario que se vean los cambios en la interfaz grafica
     private void terminateProcessInterfaceUpdate() {
         // cuando se termina un proceso, en la interfaz de esa CPU se debe mostrar como que ningun proceso se esta ejecutando en ese momento
@@ -167,7 +148,7 @@ public class CPU extends Thread {
     public String toString() {
         return "CPU{" +
                "id=" + cpuId +
-               ", proceso=" + (process != null ? process.getName() : "Ningun proceso ha sido asignado") +
+               ", proceso=" + (currentProcess != null ? currentProcess.getName() : "Ningun proceso ha sido asignado") +
                ", activo=" + busy +
                '}';
     }

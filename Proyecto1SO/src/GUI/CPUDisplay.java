@@ -33,7 +33,7 @@ public class CPUDisplay extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    // Para actualizar la informacion y cada valor de la CPU en la interfaz
+    // Para actualizar la informacion y cada valor de la CPU en la interfaz cuando cambie un proceso en cada CPU
     public void updateCPUDisplay() {
         //Actualizar el numero de CPU (1,2,3)
         CPUIDVAR.setText(String.valueOf(cpu.getCpuId()));
