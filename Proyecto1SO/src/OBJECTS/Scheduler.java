@@ -77,4 +77,11 @@ public class Scheduler {
     public Queue getTerminatedQueue() {
         return terminatedQueue;
     }
+    
+    private static int processCounter = 1; // Contador global de procesos
+
+    public static int getNextProcessID() {
+    return processCounter++;
+}
+
 }
