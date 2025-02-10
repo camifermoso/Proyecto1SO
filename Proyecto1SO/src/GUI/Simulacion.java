@@ -121,10 +121,17 @@ public class Simulacion extends javax.swing.JFrame {
     String prioridadStr = (String) prioridadProceso.getSelectedItem();
 
     // Validar que el nombre no esté vacío y que las instrucciones sean mayores a 0
-    if (nombre.isEmpty() || instrucciones <= 0) {
+    if (nombre.isEmpty() || instrucciones <= 0 || instrucciones > 200) {
         JOptionPane.showMessageDialog(this, "Debe ingresar un nombre y una cantidad válida de instrucciones.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
+    
+    // Validar que si es I/O bound, tenga interrupciones o que sean validas
+    if (tipo.equals("I/O-bound")) {
+    if (cicloExcep == 0 || duracionExcep == 0 || cicloExcep>instrucciones || duracionExcep>instrucciones) {
+        JOptionPane.showMessageDialog(this, "Debe ingresar ciclos de interrupciones válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }}
 
     // Convertir prioridad a Enum
     Process.Priority prioridad;
@@ -147,6 +154,7 @@ public class Simulacion extends javax.swing.JFrame {
     cicloExcep = 0;
     duracionExcep = 0;
 }
+    int baseMemoryAddress = Scheduler.getNextMemoryAddress();
 
     // Crear un nuevo proceso
     Process nuevoProceso = new Process(
@@ -156,7 +164,8 @@ public class Simulacion extends javax.swing.JFrame {
         isCPUBound,
         cicloExcep,
         duracionExcep,
-        prioridad
+        prioridad,
+        baseMemoryAddress
     );
 
     // Agregar el proceso a la cola de listos en Scheduler
@@ -323,7 +332,7 @@ public class Simulacion extends javax.swing.JFrame {
                 politicaPlanificacionActionPerformed(evt);
             }
         });
-        jPanel1.add(politicaPlanificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 50, 180, -1));
+        jPanel1.add(politicaPlanificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 60, 180, -1));
 
         clockLabel.setText("CICLO DE RELOJ GLOBAL: 0");
         jPanel1.add(clockLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 30, -1, -1));
@@ -347,7 +356,7 @@ public class Simulacion extends javax.swing.JFrame {
         jPanel1.add(cpulabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 120, -1, -1));
 
         cpus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(cpus, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 150, -1, -1));
+        jPanel1.add(cpus, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 150, -1, -1));
 
         jpanelcpu1.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 1"));
 
@@ -475,7 +484,7 @@ public class Simulacion extends javax.swing.JFrame {
         jPanel1.add(graficos, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 620, -1, -1));
 
         jLabel14.setText("(hacer los 3)");
-        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 650, -1, -1));
+        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 630, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -485,7 +494,7 @@ public class Simulacion extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 661, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
         );
 
         pack();
