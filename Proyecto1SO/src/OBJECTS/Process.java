@@ -50,6 +50,30 @@ public class Process {
         }
     }
 
+    public int getTotalInstructions() {
+        return totalInstructions;
+    }
+
+    public void setTotalInstructions(int totalInstructions) {
+        this.totalInstructions = totalInstructions;
+    }
+
+    public int getExecutedInstructions() {
+        return executedInstructions;
+    }
+
+    public void setExecutedInstructions(int executedInstructions) {
+        this.executedInstructions = executedInstructions;
+    }
+
+    public boolean isIsCPUBound() {
+        return isCPUBound;
+    }
+
+    public void setIsCPUBound(boolean isCPUBound) {
+        this.isCPUBound = isCPUBound;
+    }
+
     public boolean isCompleted() {
         return executedInstructions >= totalInstructions;
     }
