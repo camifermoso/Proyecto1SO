@@ -19,11 +19,11 @@ import OBJECTS.CPU;
  * @author cristiandresgp
  */
 public class Simulacion extends javax.swing.JFrame {
-    private Clock clock;
-    private Scheduler scheduler;
+    public static Clock clock;
+    public static Scheduler scheduler;
     private ExceptionHandler exceptionHandler;
     private boolean running = true; // Control del hilo de actualización
-    private CPU cpu1, cpu2, cpu3;
+    public CPU cpu1, cpu2, cpu3;
     private boolean cpu3Active = true;
 
     /**
@@ -34,9 +34,9 @@ public class Simulacion extends javax.swing.JFrame {
         clock = new Clock();
         scheduler = new Scheduler("FCFS", 5); // Iniciar con política predeterminada
         exceptionHandler = new ExceptionHandler();
-        cpu1 = new CPU(1);
-        cpu2 = new CPU(2);
-        cpu3 = new CPU(3);
+        cpu1 = new CPU(1, scheduler, clock);
+        cpu2 = new CPU(2, scheduler, clock);
+        cpu3 = new CPU(3, scheduler, clock);
         customInit();  // Inicializa los elementos visuales
         createCPUDisplays(); // Crea los paneles para los CPUs
         clock.startClock(); // Inicia el reloj una vez que la interfaz está lista

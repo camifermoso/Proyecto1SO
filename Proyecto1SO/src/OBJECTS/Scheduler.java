@@ -12,8 +12,8 @@ import FUNCTIONS.SchedulingAlgorithms;
 import EDD.Queue;
 
 public class Scheduler {
-    private Queue readyQueue;
-    private Queue terminatedQueue;
+    private final Queue readyQueue;
+    private final Queue terminatedQueue;
     private String algorithm;
     private int quantum;
 
@@ -52,6 +52,7 @@ public class Scheduler {
                 nextProcess = null;
         }
         
+        // Si el proceso esta listo, moverlo a la cola de terminados
         if (nextProcess != null && nextProcess.isCompleted()) {
             nextProcess.setState(Process.ProcessState.TERMINATED);
             terminatedQueue.enqueue(nextProcess);
