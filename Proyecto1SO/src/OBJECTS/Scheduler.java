@@ -83,5 +83,14 @@ public class Scheduler {
     public static int getNextProcessID() {
     return processCounter++;
 }
+    private static int nextAvailableMemoryAddress = 0;  // Comienza en 0 y se incrementa
+
+    public static int getNextMemoryAddress() {
+        
+    int address = nextAvailableMemoryAddress;
+    nextAvailableMemoryAddress += 200;  // Asignamos un bloque de 200 unidades a cada proceso
+    return address;
+}
+
 
 }
