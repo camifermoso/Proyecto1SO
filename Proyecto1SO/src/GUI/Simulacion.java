@@ -41,6 +41,7 @@ public class Simulacion extends javax.swing.JFrame {
         customInit();  // Inicializa los elementos visuales
         createCPUDisplays(); // Crea los paneles para los CPUs
         clock.startClock(); // Inicia el reloj una vez que la interfaz está lista
+        actualizarColaListos();
 
         // Hilo para actualizar el ciclo de reloj en la interfaz
         new Thread(() -> {
@@ -293,6 +294,7 @@ public class Simulacion extends javax.swing.JFrame {
         estadisticas = new javax.swing.JButton();
         graficos = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
+        cargar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -486,6 +488,14 @@ public class Simulacion extends javax.swing.JFrame {
         jLabel14.setText("(hacer los 3)");
         jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 630, -1, -1));
 
+        cargar.setText("CARGAR");
+        cargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 670, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -494,7 +504,7 @@ public class Simulacion extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 661, Short.MAX_VALUE)
         );
 
         pack();
@@ -547,6 +557,11 @@ public class Simulacion extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tipoProcesoActionPerformed
 
+    private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
+        CargarTXTfuncion.cargarDesdeArchivo(this);
+        actualizarColaListos();
+    }//GEN-LAST:event_cargarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -585,6 +600,7 @@ public class Simulacion extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea blockedqueue1;
+    private javax.swing.JButton cargar;
     private javax.swing.JSpinner cicloExcepcion;
     private javax.swing.JLabel clockLabel;
     private javax.swing.JLabel cpulabel;
