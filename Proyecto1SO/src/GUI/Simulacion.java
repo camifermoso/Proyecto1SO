@@ -422,8 +422,8 @@ public class Simulacion extends javax.swing.JFrame {
                 nombreProcesoActionPerformed(evt);
             }
         });
-        jPanel2.add(nombreProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 40, 90, -1));
-        jPanel2.add(totalInstrucciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, -1, -1));
+        jPanel2.add(nombreProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 40, 100, -1));
+        jPanel2.add(totalInstrucciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 60, -1));
 
         tipoProceso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         tipoProceso.addActionListener(new java.awt.event.ActionListener() {
@@ -432,8 +432,8 @@ public class Simulacion extends javax.swing.JFrame {
             }
         });
         jPanel2.add(tipoProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, -1, -1));
-        jPanel2.add(cicloExcepcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 140, -1, -1));
-        jPanel2.add(duracionExcepcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 160, -1, -1));
+        jPanel2.add(cicloExcepcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(288, 140, 70, -1));
+        jPanel2.add(duracionExcepcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(198, 160, 70, -1));
 
         prioridadProceso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jPanel2.add(prioridadProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, -1, -1));

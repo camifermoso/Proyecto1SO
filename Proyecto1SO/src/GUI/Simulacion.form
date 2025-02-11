@@ -354,14 +354,14 @@
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="160" y="40" width="90" height="-1"/>
+                  <AbsoluteConstraints x="160" y="40" width="100" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
             <Component class="javax.swing.JSpinner" name="totalInstrucciones">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="230" y="70" width="-1" height="-1"/>
+                  <AbsoluteConstraints x="230" y="70" width="60" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -391,14 +391,14 @@
             <Component class="javax.swing.JSpinner" name="cicloExcepcion">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="280" y="140" width="-1" height="-1"/>
+                  <AbsoluteConstraints x="288" y="140" width="70" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
             <Component class="javax.swing.JSpinner" name="duracionExcepcion">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="190" y="160" width="-1" height="-1"/>
+                  <AbsoluteConstraints x="198" y="160" width="70" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
