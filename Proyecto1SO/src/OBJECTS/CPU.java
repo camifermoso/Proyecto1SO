@@ -4,6 +4,7 @@
  */
 package OBJECTS;
 
+import GUI.CPUDisplay;
 import GUI.main;
 import GUI.Simulacion;
 import java.util.concurrent.Semaphore;
@@ -15,7 +16,8 @@ public class CPU extends Thread {
     private final Semaphore cpuSemaphore; // Semaforo de exclusion mutua
     private volatile boolean running; // Al iniciar la CPU siempre esta running, este es el estado de ejecucion de la CPU
     private final Scheduler scheduler;
-    private  Clock clock;
+    private Clock clock;
+    private CPUDisplay cpuDisplay;
     
     public CPU(int cpuId, Scheduler scheduler, Clock clock) {
         this.cpuId = cpuId;
@@ -25,13 +27,14 @@ public class CPU extends Thread {
         this.cpuSemaphore = new Semaphore(1); //Inicializacion del semaforo
         this.scheduler = scheduler;
         this.clock = clock;
+        this.cpuDisplay = cpuDisplay;
     }
     
     // Cuando se asigna un proceso distinto es necesario que se vean los cambios en la interfaz grafica
     private void assignProcessInterfaceUpdate(Process process) {
         // x debe actualizar lo que sale en la interfaz con updateCPUDisplay();
         if (cpuId == 1) {
-            //x
+            GUI.Simulacion.cpuDisplay1.updateCPUDisplay();
         } else if (cpuId == 2) {
             //x
         } else {

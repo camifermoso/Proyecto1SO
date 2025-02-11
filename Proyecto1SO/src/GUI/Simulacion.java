@@ -23,8 +23,11 @@ public class Simulacion extends javax.swing.JFrame {
     public static Scheduler scheduler;
     private ExceptionHandler exceptionHandler;
     private boolean running = true; // Control del hilo de actualización
-    public CPU cpu1, cpu2, cpu3;
+    public static CPU cpu1, cpu2, cpu3;
     private boolean cpu3Active = true;
+    
+    // Cada display de CPU
+    public static CPUDisplay cpuDisplay1, cpuDisplay2, cpuDisplay3;
 
     /**
      * Constructor
@@ -33,7 +36,7 @@ public class Simulacion extends javax.swing.JFrame {
         initComponents();
         clock = new Clock();
         scheduler = new Scheduler("FCFS", 5); // Iniciar con política predeterminada
-        exceptionHandler = new ExceptionHandler();
+        exceptionHandler = new ExceptionHandler();  
         cpu1 = new CPU(1, scheduler, clock);
         cpu2 = new CPU(2, scheduler, clock);
         cpu3 = new CPU(3, scheduler, clock);
@@ -41,6 +44,13 @@ public class Simulacion extends javax.swing.JFrame {
         createCPUDisplays(); // Crea los paneles para los CPUs
         clock.startClock(); // Inicia el reloj una vez que la interfaz está lista
 
+        
+        
+        // Display de cada CPU
+        cpuDisplay1 = new CPUDisplay(cpu1);
+        cpuDisplay2 = new CPUDisplay(cpu2);
+        cpuDisplay3 = new CPUDisplay(cpu3);
+        
         // Hilo para actualizar el ciclo de reloj en la interfaz
         new Thread(() -> {
             while (running) {
@@ -246,6 +256,11 @@ public class Simulacion extends javax.swing.JFrame {
         jPanel1.add(cpulabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 150, -1, -1));
 
         cpus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cpus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cpusActionPerformed(evt);
+            }
+        });
         jPanel1.add(cpus, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 180, -1, -1));
 
         jpanelcpu1.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 1"));
@@ -361,6 +376,10 @@ public class Simulacion extends javax.swing.JFrame {
         FuncionesInterfaz.openGraficos();
         this.setVisible(false);
     }//GEN-LAST:event_graficosActionPerformed
+
+    private void cpusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cpusActionPerformed
 
     /**
      * @param args the command line arguments
