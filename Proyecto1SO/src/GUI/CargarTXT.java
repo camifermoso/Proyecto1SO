@@ -29,6 +29,7 @@ public class CargarTXT extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        cargar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,6 +46,14 @@ public class CargarTXT extends javax.swing.JFrame {
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 260, -1, -1));
 
+        cargar.setText("CARGAR");
+        cargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -60,9 +69,16 @@ public class CargarTXT extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        FuncionesInterfaz.openBienvenida();
+        FuncionesInterfaz.VolverMenu();
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
+        
+    CargarTXTfuncion.cargarDesdeArchivo(this);
+
+
+    }//GEN-LAST:event_cargarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -100,6 +116,7 @@ public class CargarTXT extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cargar;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
