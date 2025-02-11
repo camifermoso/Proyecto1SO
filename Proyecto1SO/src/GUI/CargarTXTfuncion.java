@@ -18,10 +18,20 @@ public class CargarTXTfuncion {
     public static void cargarDesdeArchivo(JFrame frame) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Seleccionar archivo de configuración");
+        
+        // Filtro para permitir solo archivos .txt
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos de texto (*.txt)", "txt"));
 
         int seleccion = fileChooser.showOpenDialog(frame);
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             File archivo = fileChooser.getSelectedFile();
+            
+            // Verificar si el archivo tiene la extensión correcta
+            if (!archivo.getName().toLowerCase().endsWith(".txt")) {
+                JOptionPane.showMessageDialog(frame, "Solo se permiten archivos .txt", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             try {
                 BufferedReader br = new BufferedReader(new FileReader(archivo));
                 String linea;

@@ -415,7 +415,7 @@ public class Simulacion extends javax.swing.JFrame {
                 crearActionPerformed(evt);
             }
         });
-        jPanel2.add(crear, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 230, 130, -1));
+        jPanel2.add(crear, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 230, 130, -1));
 
         nombreProceso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -457,9 +457,9 @@ public class Simulacion extends javax.swing.JFrame {
         jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, -1, -1));
 
         jLabel7.setText("CREAR UN NUEVO PROCESO:");
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, -1, -1));
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, -1, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 330, 490, 270));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 330, 380, 270));
 
         guardar.setText("GUARDAR");
         guardar.addActionListener(new java.awt.event.ActionListener() {
@@ -467,7 +467,7 @@ public class Simulacion extends javax.swing.JFrame {
                 guardarActionPerformed(evt);
             }
         });
-        jPanel1.add(guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 620, -1, -1));
+        jPanel1.add(guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 570, -1, -1));
 
         estadisticas.setText("ESTADÍSTICAS");
         estadisticas.addActionListener(new java.awt.event.ActionListener() {
@@ -475,7 +475,7 @@ public class Simulacion extends javax.swing.JFrame {
                 estadisticasActionPerformed(evt);
             }
         });
-        jPanel1.add(estadisticas, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 620, -1, -1));
+        jPanel1.add(estadisticas, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 610, -1, -1));
 
         graficos.setText("GRÁFICOS");
         graficos.addActionListener(new java.awt.event.ActionListener() {
@@ -483,10 +483,10 @@ public class Simulacion extends javax.swing.JFrame {
                 graficosActionPerformed(evt);
             }
         });
-        jPanel1.add(graficos, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 620, -1, -1));
+        jPanel1.add(graficos, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 610, -1, -1));
 
-        jLabel14.setText("(hacer los 3)");
-        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 630, -1, -1));
+        jLabel14.setText("(hacer guardar, graficos y stats)");
+        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 610, -1, -1));
 
         cargar.setText("CARGAR");
         cargar.addActionListener(new java.awt.event.ActionListener() {
@@ -494,7 +494,7 @@ public class Simulacion extends javax.swing.JFrame {
                 cargarActionPerformed(evt);
             }
         });
-        jPanel1.add(cargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 670, -1, -1));
+        jPanel1.add(cargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 530, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -504,7 +504,7 @@ public class Simulacion extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 661, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
         );
 
         pack();
