@@ -14,6 +14,7 @@ import OBJECTS.ExceptionHandler;
 import OBJECTS.Scheduler;
 import OBJECTS.CPU;
 import OBJECTS.Process;
+import java.awt.event.ActionEvent;
 
 /**
  *
@@ -35,14 +36,19 @@ public class Simulacion extends javax.swing.JFrame {
         clock = new Clock();
         scheduler = new Scheduler("FCFS", 5); // Iniciar con política predeterminada
         exceptionHandler = new ExceptionHandler();
-        cpu1 = new CPU(1, scheduler, clock);
-        cpu2 = new CPU(2, scheduler, clock);
-        cpu3 = new CPU(3, scheduler, clock);
+        cpu1 = new CPU(1, scheduler, clock, this);
+        cpu2 = new CPU(2, scheduler, clock, this);
+        cpu3 = new CPU(3, scheduler, clock, this);
         customInit();  // Inicializa los elementos visuales
-        createCPUDisplays(); // Crea los paneles para los CPUs
+//        createCPUDisplays(); // Crea los paneles para los CPUs
         clock.startClock(); // Inicia el reloj una vez que la interfaz está lista
         actualizarColaListos();
-
+        
+        // Iniciar los hilos de CPU (IMPORTANTE: Debe estar dentro del constructor)
+        cpu1.start();
+        cpu2.start();
+        cpu3.start();
+    
         // Hilo para actualizar el ciclo de reloj en la interfaz
         new Thread(() -> {
             while (running) {
@@ -59,6 +65,7 @@ public class Simulacion extends javax.swing.JFrame {
             }
         }).start();
     }
+   
     
     /**
      * Inicializa los elementos personalizados
@@ -100,18 +107,108 @@ public class Simulacion extends javax.swing.JFrame {
         prioridadProceso.setModel(new DefaultComboBoxModel<>(new String[]{"ALTA", "MEDIA", "BAJA"}));
 
     }
-
-    /**
-     * Crea los paneles de los CPUs
-     */
-    private void createCPUDisplays() {
-    configureCPUPanel(jpanelcpu1, "CPU 1");
-    configureCPUPanel(jpanelcpu2, "CPU 2");
-    configureCPUPanel(jpanelcpu3, "CPU 3");
     
-    jpanelcpu3.setVisible(cpu3Active); // Mostrar u ocultar CPU 3 según la configuración
+    ////////
+    ////////CPU
+    ///////
+
+    // Funciones para actualizar la interfaz de cada CPU
+    public void actualizarCPU1() {
+        cpu1nombre.setText(cpu1.getCurrentProcess() != null ? cpu1.getCurrentProcess().getName() : "Proceso");
+        cpu1id.setText(cpu1.getCurrentProcess() != null ? String.valueOf(cpu1.getCurrentProcess().getProcessID()) : "No Disponible" );
+        cpu1estado.setText(cpu1.getCurrentProcess() != null ? String.valueOf(cpu1.getCurrentProcess().getState()) : "No Disponible");
+        cpu1pc.setText(cpu1.getCurrentProcess() != null ? String.valueOf(cpu1.getCurrentProcess().getProgramCounter()) : "No Disponible");
+        cpu1mar.setText(cpu1.getCurrentProcess() != null ? String.valueOf(cpu1.getCurrentProcess().getMemoryAddressRegister()) : "No Disponible");
     }
     
+    public void actualizarCPU2() {
+        cpu2nombre.setText(cpu2.getCurrentProcess() != null ? cpu2.getCurrentProcess().getName() : "Proceso");
+        cpu2id.setText(cpu2.getCurrentProcess() != null ? String.valueOf(cpu2.getCurrentProcess().getProcessID()) : "No Disponible" );
+        cpu2estado.setText(cpu2.getCurrentProcess() != null ? String.valueOf(cpu2.getCurrentProcess().getState()) : "No Disponible");
+        cpu2pc.setText(cpu2.getCurrentProcess() != null ? String.valueOf(cpu2.getCurrentProcess().getProgramCounter()) : "No Disponible");
+        cpu2mar.setText(cpu2.getCurrentProcess() != null ? String.valueOf(cpu2.getCurrentProcess().getMemoryAddressRegister()) : "No Disponible");
+    }   
+    
+    public void actualizarCPU3() {
+        cpu3nombre.setText(cpu3.getCurrentProcess() != null ? cpu3.getCurrentProcess().getName() : "Proceso");
+        cpu3id.setText(cpu3.getCurrentProcess() != null ? String.valueOf(cpu3.getCurrentProcess().getProcessID()) : "No Disponible" );
+        cpu3estado.setText(cpu3.getCurrentProcess() != null ? String.valueOf(cpu3.getCurrentProcess().getState()) : "No Disponible");
+        cpu3pc.setText(cpu3.getCurrentProcess() != null ? String.valueOf(cpu3.getCurrentProcess().getProgramCounter()) : "No Disponible");
+        cpu3mar.setText(cpu3.getCurrentProcess() != null ? String.valueOf(cpu3.getCurrentProcess().getMemoryAddressRegister()) : "No Disponible");
+    }   
+    
+    // Cuando se libera un proceso y la CPU esta libre, se debe actualizar la interfaz
+    public void liberarCPU1() {
+        cpu1nombre.setText("Sin proceso");
+        cpu1id.setText("-");
+        cpu1estado.setText("-");
+        cpu1pc.setText("-");
+        cpu1mar.setText("-");
+    }
+    
+        public void liberarCPU2() {
+        cpu2nombre.setText("Sin proceso");
+        cpu2id.setText("-");
+        cpu2estado.setText("-");
+        cpu2pc.setText("-");
+        cpu2mar.setText("-");
+    }
+        
+        public void liberarCPU3() {
+        cpu3nombre.setText("Sin proceso");
+        cpu3id.setText("-");
+        cpu3estado.setText("-");
+        cpu3pc.setText("-");
+        cpu3mar.setText("-");
+    }
+    
+    // cuando se termina un proceso, en la interfaz de esa CPU se debe mostrar como que ningun proceso se esta ejecutando en ese momento
+    
+//    private void configureCPUPanel(JPanel panel, String title) {
+//        panel.setLayout(new GridLayout(6, 1)); // Organiza los labels en una columna
+//        panel.removeAll(); // Elimina cualquier contenido anterior
+//
+//        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
+//        JLabel processLabel = new JLabel(" Proceso en ejecución: -");
+//        JLabel idLabel = new JLabel(" ID: -");
+//        JLabel pcLabel = new JLabel(" PC: -");
+//        JLabel marLabel = new JLabel(" MAR: -");
+//        JLabel statusLabel = new JLabel(" Status: -");
+//
+//        panel.add(titleLabel);
+//        panel.add(processLabel);
+//        panel.add(idLabel);
+//        panel.add(pcLabel);
+//        panel.add(marLabel);
+//        panel.add(statusLabel);
+//
+//        panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//        panel.revalidate();
+//        panel.repaint();
+//    }
+    
+        // Crea los paneles de los CPUs
+//    private void createCPUDisplays() {
+//    configureCPUPanel(jpanelcpu1, "CPU 1");
+//    configureCPUPanel(jpanelcpu2, "CPU 2");
+//    configureCPUPanel(jpanelcpu3, "CPU 3");
+//    
+//    jpanelcpu3.setVisible(cpu3Active); // Mostrar u ocultar CPU 3 según la configuración
+//    }
+    
+    /**
+     * Método para actualizar la interfaz de los CPUs
+     */
+    private void updateCPUsDisplay() {
+        jpanelcpu1.setVisible(true);
+        jpanelcpu2.setVisible(true);
+        jpanelcpu3.setVisible(cpu3Active);
+    }
+    
+    
+    ////////
+    ////////PROCESOS
+    ///////  
     private void crearProceso() {
     // Obtener valores de los campos
     String nombre = nombreProceso.getText().trim();
@@ -203,37 +300,6 @@ public class Simulacion extends javax.swing.JFrame {
     }
 }
 
-    private void configureCPUPanel(JPanel panel, String title) {
-    panel.setLayout(new GridLayout(6, 1)); // Organiza los labels en una columna
-    panel.removeAll(); // Elimina cualquier contenido anterior
-
-    JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
-    JLabel processLabel = new JLabel(" Proceso en ejecución: -");
-    JLabel idLabel = new JLabel(" ID: -");
-    JLabel pcLabel = new JLabel(" PC: -");
-    JLabel marLabel = new JLabel(" MAR: -");
-    JLabel statusLabel = new JLabel(" Status: -");
-
-    panel.add(titleLabel);
-    panel.add(processLabel);
-    panel.add(idLabel);
-    panel.add(pcLabel);
-    panel.add(marLabel);
-    panel.add(statusLabel);
-
-    panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-    panel.revalidate();
-    panel.repaint();
-    }
-
-    /**
-     * Método para actualizar la interfaz de los CPUs
-     */
-    private void updateCPUsDisplay() {
-        jpanelcpu1.setVisible(true);
-        jpanelcpu2.setVisible(true);
-        jpanelcpu3.setVisible(cpu3Active);
-    }
 
     /**
      * Método para detener el hilo antes de cerrar la ventana
@@ -243,6 +309,17 @@ public class Simulacion extends javax.swing.JFrame {
         running = false; // Detener el hilo de actualización
         super.dispose();
     }
+    
+    public void stopSimulation() {
+    running = false; // Stop UI update loop
+    cpu1.stopCPU();
+    cpu2.stopCPU();
+    cpu3.stopCPU();
+}
+
+    private void cpusActionPerformed(ActionEvent evt) {
+    // Código que debe ejecutarse cuando se llama a cpusActionPerformed
+}
 
 
     /**
@@ -273,8 +350,16 @@ public class Simulacion extends javax.swing.JFrame {
         cpulabel = new javax.swing.JLabel();
         cpus = new javax.swing.JComboBox<>();
         jpanelcpu1 = new javax.swing.JPanel();
-        jpanelcpu2 = new javax.swing.JPanel();
-        jpanelcpu3 = new javax.swing.JPanel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        cpu1mar = new javax.swing.JLabel();
+        cpu1id = new javax.swing.JLabel();
+        cpu1estado = new javax.swing.JLabel();
+        cpu1pc = new javax.swing.JLabel();
+        cpu1nombre = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         crear = new javax.swing.JButton();
         nombreProceso = new javax.swing.JTextField();
@@ -295,6 +380,28 @@ public class Simulacion extends javax.swing.JFrame {
         graficos = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         cargar = new javax.swing.JButton();
+        jpanelcpu2 = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        cpu2mar = new javax.swing.JLabel();
+        cpu2id = new javax.swing.JLabel();
+        cpu2estado = new javax.swing.JLabel();
+        cpu2pc = new javax.swing.JLabel();
+        cpu2nombre = new javax.swing.JLabel();
+        jpanelcpu3 = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        cpu3mar = new javax.swing.JLabel();
+        cpu3nombre = new javax.swing.JLabel();
+        cpu3id = new javax.swing.JLabel();
+        cpu3estado = new javax.swing.JLabel();
+        cpu3pc = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -358,53 +465,52 @@ public class Simulacion extends javax.swing.JFrame {
         jPanel1.add(cpulabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 120, -1, -1));
 
         cpus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cpus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cpusActionPerformed(evt);
+            }
+        });
         jPanel1.add(cpus, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 150, -1, -1));
 
         jpanelcpu1.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 1"));
+        jpanelcpu1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout jpanelcpu1Layout = new javax.swing.GroupLayout(jpanelcpu1);
-        jpanelcpu1.setLayout(jpanelcpu1Layout);
-        jpanelcpu1Layout.setHorizontalGroup(
-            jpanelcpu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jpanelcpu1Layout.setVerticalGroup(
-            jpanelcpu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+        jLabel20.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel20.setText("Nombre del Proceso:");
+        jpanelcpu1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
-        jPanel1.add(jpanelcpu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 190, -1, -1));
+        jLabel22.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel22.setText("ID:");
+        jpanelcpu1.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
 
-        jpanelcpu2.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 2"));
-        jpanelcpu2.setToolTipText("");
+        jLabel24.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel24.setText("Estado:");
+        jpanelcpu1.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
 
-        javax.swing.GroupLayout jpanelcpu2Layout = new javax.swing.GroupLayout(jpanelcpu2);
-        jpanelcpu2.setLayout(jpanelcpu2Layout);
-        jpanelcpu2Layout.setHorizontalGroup(
-            jpanelcpu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jpanelcpu2Layout.setVerticalGroup(
-            jpanelcpu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+        jLabel26.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel26.setText("Estado PC:");
+        jpanelcpu1.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
 
-        jPanel1.add(jpanelcpu2, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 190, -1, -1));
+        jLabel28.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel28.setText("Estado MAR:");
+        jpanelcpu1.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
 
-        jpanelcpu3.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 3"));
+        cpu1mar.setText("Estado MAR");
+        jpanelcpu1.add(cpu1mar, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, -1, -1));
 
-        javax.swing.GroupLayout jpanelcpu3Layout = new javax.swing.GroupLayout(jpanelcpu3);
-        jpanelcpu3.setLayout(jpanelcpu3Layout);
-        jpanelcpu3Layout.setHorizontalGroup(
-            jpanelcpu3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jpanelcpu3Layout.setVerticalGroup(
-            jpanelcpu3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+        cpu1id.setText("Id");
+        jpanelcpu1.add(cpu1id, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, -1, -1));
 
-        jPanel1.add(jpanelcpu3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 190, -1, -1));
+        cpu1estado.setText("Estado");
+        jpanelcpu1.add(cpu1estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, -1, -1));
+
+        cpu1pc.setText("Estado PC");
+        jpanelcpu1.add(cpu1pc, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, -1, -1));
+
+        cpu1nombre.setText("Nombre");
+        jpanelcpu1.add(cpu1nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, -1, -1));
+
+        jPanel1.add(jpanelcpu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 190, 250, 130));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -496,11 +602,92 @@ public class Simulacion extends javax.swing.JFrame {
         });
         jPanel1.add(cargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 530, -1, -1));
 
+        jpanelcpu2.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 2"));
+        jpanelcpu2.setToolTipText("");
+        jpanelcpu2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel21.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel21.setText("Nombre del Proceso:");
+        jpanelcpu2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+
+        jLabel23.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel23.setText("ID:");
+        jpanelcpu2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
+
+        jLabel25.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel25.setText("Estado:");
+        jpanelcpu2.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
+
+        jLabel27.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel27.setText("Estado PC:");
+        jpanelcpu2.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
+
+        jLabel29.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel29.setText("Estado MAR:");
+        jpanelcpu2.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
+
+        cpu2mar.setText("Estado MAR");
+        jpanelcpu2.add(cpu2mar, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, -1, -1));
+
+        cpu2id.setText("Id");
+        jpanelcpu2.add(cpu2id, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, -1, -1));
+
+        cpu2estado.setText("Estado");
+        jpanelcpu2.add(cpu2estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, -1, -1));
+
+        cpu2pc.setText("Estado PC");
+        jpanelcpu2.add(cpu2pc, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, -1, -1));
+
+        cpu2nombre.setText("Nombre");
+        jpanelcpu2.add(cpu2nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, -1, -1));
+
+        jPanel1.add(jpanelcpu2, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 190, 250, 130));
+
+        jpanelcpu3.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 3"));
+        jpanelcpu3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel15.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel15.setText("Nombre del Proceso:");
+        jpanelcpu3.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+
+        jLabel16.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel16.setText("ID:");
+        jpanelcpu3.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
+
+        jLabel17.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel17.setText("Estado:");
+        jpanelcpu3.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
+
+        jLabel18.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel18.setText("Estado PC:");
+        jpanelcpu3.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
+
+        jLabel19.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jLabel19.setText("Estado MAR:");
+        jpanelcpu3.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
+
+        cpu3mar.setText("Estado MAR");
+        jpanelcpu3.add(cpu3mar, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, -1, -1));
+
+        cpu3nombre.setText("Nombre");
+        jpanelcpu3.add(cpu3nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, -1, -1));
+
+        cpu3id.setText("Id");
+        jpanelcpu3.add(cpu3id, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, -1, -1));
+
+        cpu3estado.setText("Estado");
+        jpanelcpu3.add(cpu3estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, -1, -1));
+
+        cpu3pc.setText("Estado PC");
+        jpanelcpu3.add(cpu3pc, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, -1, -1));
+
+        jPanel1.add(jpanelcpu3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 190, 250, 130));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1252, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1484, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -603,6 +790,21 @@ public class Simulacion extends javax.swing.JFrame {
     private javax.swing.JButton cargar;
     private javax.swing.JSpinner cicloExcepcion;
     private javax.swing.JLabel clockLabel;
+    private javax.swing.JLabel cpu1estado;
+    private javax.swing.JLabel cpu1id;
+    private javax.swing.JLabel cpu1mar;
+    private javax.swing.JLabel cpu1nombre;
+    private javax.swing.JLabel cpu1pc;
+    private javax.swing.JLabel cpu2estado;
+    private javax.swing.JLabel cpu2id;
+    private javax.swing.JLabel cpu2mar;
+    private javax.swing.JLabel cpu2nombre;
+    private javax.swing.JLabel cpu2pc;
+    private javax.swing.JLabel cpu3estado;
+    private javax.swing.JLabel cpu3id;
+    private javax.swing.JLabel cpu3mar;
+    private javax.swing.JLabel cpu3nombre;
+    private javax.swing.JLabel cpu3pc;
     private javax.swing.JLabel cpulabel;
     private javax.swing.JComboBox<String> cpus;
     private javax.swing.JButton crear;
@@ -617,7 +819,22 @@ public class Simulacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

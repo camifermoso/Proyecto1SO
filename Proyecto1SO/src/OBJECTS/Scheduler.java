@@ -10,6 +10,7 @@ package OBJECTS;
  */
 import FUNCTIONS.SchedulingAlgorithms;
 import EDD.Queue;
+import java.util.concurrent.Semaphore;
 
 public class Scheduler {
     private final Queue readyQueue;
@@ -18,7 +19,9 @@ public class Scheduler {
     private int quantum;
     private static int processCounter = 1; // Contador global de procesos
     private static int nextAvailableMemoryAddress = 0;  // Comienza en 0 y se incrementa
-
+    
+    private final Semaphore schedulerSemaphore = new Semaphore(1, true); // Exclusion mutua en asignacion
+    
     public Scheduler(String algorithm, int quantum) {
         this.readyQueue = new Queue(); // Cola única de listos
         this.terminatedQueue = new Queue(); // Cola de terminados
