@@ -282,7 +282,7 @@ public class Simulacion extends javax.swing.JFrame {
     actualizarColaListos();
 }
     
-    private void actualizarColaListos() {
+    public void actualizarColaListos() {
     readyqueue.setText(scheduler.getReadyQueue().getAllProcesses());
 }
     // metodo para manejar la habilitación/deshabilitación de los JSpinner
