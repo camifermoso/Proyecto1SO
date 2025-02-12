@@ -70,6 +70,7 @@ public class CPU extends Thread {
                             process.setExecuting(true); // Evita que otros CPUs ejecuten el mismo proceso
                             currentProcess = process;
                             assignProcessInterfaceUpdate(process);
+                            gui.actualizarColaListos();
                             System.out.println("CPU " + cpuId + " está ejecutando el proceso " + process.getName());
                         }
                     } else {
