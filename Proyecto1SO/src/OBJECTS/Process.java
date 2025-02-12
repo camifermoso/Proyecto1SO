@@ -24,9 +24,11 @@ public class Process {
     private boolean executing = false; // Indica si un proceso esta siendo ejecutado por una CPU o no
     private int programCounter;
     private int memoryAddressRegister;
+    private int baseMemoryAddress;  // Dirección base en memoria del proceso
+
 
     public Process(int processID, String name, int totalInstructions, boolean isCPUBound, 
-                   int exceptionCycle, int exceptionDuration, Priority priority) {
+                   int exceptionCycle, int exceptionDuration, Priority priority, int baseMemoryAddress) {
         this.processID = processID;
         this.name = name;
         this.totalInstructions = totalInstructions;
@@ -37,17 +39,44 @@ public class Process {
         this.priority = priority;
         this.state = ProcessState.READY;
         this.programCounter = 0;
-        this.memoryAddressRegister = 0;
+        this.memoryAddressRegister = baseMemoryAddress;  // Inicializar MAR con la dirección base
+        this.baseMemoryAddress = baseMemoryAddress;  // Guardar la dirección base del proceso
+        
     }
 
     public void executeInstruction() {
         if (executedInstructions < totalInstructions) {
             executedInstructions++;
+            memoryAddressRegister = baseMemoryAddress + programCounter;
             programCounter++;
         }
         if (executedInstructions >= totalInstructions) {
             this.state = ProcessState.TERMINATED;
         }
+    }
+
+    public int getTotalInstructions() {
+        return totalInstructions;
+    }
+
+    public void setTotalInstructions(int totalInstructions) {
+        this.totalInstructions = totalInstructions;
+    }
+
+    public int getExecutedInstructions() {
+        return executedInstructions;
+    }
+
+    public void setExecutedInstructions(int executedInstructions) {
+        this.executedInstructions = executedInstructions;
+    }
+
+    public boolean isIsCPUBound() {
+        return isCPUBound;
+    }
+
+    public void setIsCPUBound(boolean isCPUBound) {
+        this.isCPUBound = isCPUBound;
     }
 
     public boolean isCompleted() {

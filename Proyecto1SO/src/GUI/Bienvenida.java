@@ -28,7 +28,6 @@ public class Bienvenida extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        botonTxt = new javax.swing.JButton();
         botonSimulacion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -38,40 +37,27 @@ public class Bienvenida extends javax.swing.JFrame {
         jLabel1.setText("SIMULACIÓN DE PLANIFICACIÓN DE PROCESOS");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 40, -1, -1));
 
-        botonTxt.setText("Cargar un txt");
-        botonTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonTxtActionPerformed(evt);
-            }
-        });
-        jPanel1.add(botonTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, -1, -1));
-
         botonSimulacion.setText("Empezar simulación");
         botonSimulacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonSimulacionActionPerformed(evt);
             }
         });
-        jPanel1.add(botonSimulacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 180, -1, -1));
+        jPanel1.add(botonSimulacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void botonTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTxtActionPerformed
-        FuncionesInterfaz.openCargartxt();
-        this.setVisible(false);
-    }//GEN-LAST:event_botonTxtActionPerformed
 
     private void botonSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSimulacionActionPerformed
         FuncionesInterfaz.openSimulacion();
@@ -115,7 +101,6 @@ public class Bienvenida extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonSimulacion;
-    private javax.swing.JButton botonTxt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

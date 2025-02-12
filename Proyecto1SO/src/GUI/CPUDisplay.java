@@ -51,7 +51,6 @@ public class CPUDisplay extends javax.swing.JFrame {
 // cuando se termina un proceso, en la interfaz de esa CPU se debe mostrar como que ningun proceso se esta ejecutando en ese momento
     
     
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

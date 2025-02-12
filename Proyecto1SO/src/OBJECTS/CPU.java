@@ -36,9 +36,9 @@ public class CPU extends Thread {
         if (cpuId == 1) {
             GUI.Simulacion.cpuDisplay1.updateCPUDisplay();
         } else if (cpuId == 2) {
-            //x
+            GUI.Simulacion.cpuDisplay2.updateCPUDisplay();
         } else {
-            //x
+            GUI.Simulacion.cpuDisplay3.updateCPUDisplay();
         }
     }
 

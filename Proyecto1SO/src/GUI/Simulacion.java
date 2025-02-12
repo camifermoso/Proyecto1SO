@@ -13,6 +13,7 @@ import OBJECTS.Clock;
 import OBJECTS.ExceptionHandler;
 import OBJECTS.Scheduler;
 import OBJECTS.CPU;
+import OBJECTS.Process;
 
 /**
  *
@@ -23,11 +24,8 @@ public class Simulacion extends javax.swing.JFrame {
     public static Scheduler scheduler;
     private ExceptionHandler exceptionHandler;
     private boolean running = true; // Control del hilo de actualización
-    public static CPU cpu1, cpu2, cpu3;
+    public CPU cpu1, cpu2, cpu3;
     private boolean cpu3Active = true;
-    
-    // Cada display de CPU
-    public static CPUDisplay cpuDisplay1, cpuDisplay2, cpuDisplay3;
 
     /**
      * Constructor
@@ -36,21 +34,15 @@ public class Simulacion extends javax.swing.JFrame {
         initComponents();
         clock = new Clock();
         scheduler = new Scheduler("FCFS", 5); // Iniciar con política predeterminada
-        exceptionHandler = new ExceptionHandler();  
+        exceptionHandler = new ExceptionHandler();
         cpu1 = new CPU(1, scheduler, clock);
         cpu2 = new CPU(2, scheduler, clock);
         cpu3 = new CPU(3, scheduler, clock);
         customInit();  // Inicializa los elementos visuales
         createCPUDisplays(); // Crea los paneles para los CPUs
         clock.startClock(); // Inicia el reloj una vez que la interfaz está lista
+        actualizarColaListos();
 
-        
-        
-        // Display de cada CPU
-        cpuDisplay1 = new CPUDisplay(cpu1);
-        cpuDisplay2 = new CPUDisplay(cpu2);
-        cpuDisplay3 = new CPUDisplay(cpu3);
-        
         // Hilo para actualizar el ciclo de reloj en la interfaz
         new Thread(() -> {
             while (running) {
@@ -102,6 +94,11 @@ public class Simulacion extends javax.swing.JFrame {
             jpanelcpu3.setVisible(cpu3Active);
             System.out.println("Cantidad de CPUs activas: " + selectedCPUs);
         });
+        
+        // Definir opciones en los JComboBox
+        tipoProceso.setModel(new DefaultComboBoxModel<>(new String[]{"I/O-bound", "CPU-bound"}));
+        prioridadProceso.setModel(new DefaultComboBoxModel<>(new String[]{"ALTA", "MEDIA", "BAJA"}));
+
     }
 
     /**
@@ -115,6 +112,97 @@ public class Simulacion extends javax.swing.JFrame {
     jpanelcpu3.setVisible(cpu3Active); // Mostrar u ocultar CPU 3 según la configuración
     }
     
+    private void crearProceso() {
+    // Obtener valores de los campos
+    String nombre = nombreProceso.getText().trim();
+    int instrucciones = (int) totalInstrucciones.getValue();
+    String tipo = (String) tipoProceso.getSelectedItem();
+    int cicloExcep = (int) cicloExcepcion.getValue();
+    int duracionExcep = (int) duracionExcepcion.getValue();
+    String prioridadStr = (String) prioridadProceso.getSelectedItem();
+
+    // Validar que el nombre no esté vacío y que las instrucciones sean mayores a 0
+    if (nombre.isEmpty() || instrucciones <= 0 || instrucciones > 200) {
+        JOptionPane.showMessageDialog(this, "Debe ingresar un nombre y una cantidad válida de instrucciones.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // Validar que si es I/O bound, tenga interrupciones o que sean validas
+    if (tipo.equals("I/O-bound")) {
+    if (cicloExcep == 0 || duracionExcep == 0 || cicloExcep>instrucciones || duracionExcep>instrucciones) {
+        JOptionPane.showMessageDialog(this, "Debe ingresar ciclos de interrupciones válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }}
+
+    // Convertir prioridad a Enum
+    Process.Priority prioridad;
+    switch (prioridadStr) {
+        case "ALTA":
+            prioridad = Process.Priority.ALTA;
+            break;
+        case "MEDIA":
+            prioridad = Process.Priority.MEDIA;
+            break;
+        default:
+            prioridad = Process.Priority.BAJA;
+    }
+
+    // Determinar si es CPU-bound o I/O-bound
+    boolean isCPUBound = tipo.equals("CPU-bound");
+
+    // Si es CPU-bound, la excepción siempre será 0
+    if (isCPUBound) {
+    cicloExcep = 0;
+    duracionExcep = 0;
+}
+    int baseMemoryAddress = Scheduler.getNextMemoryAddress();
+
+    // Crear un nuevo proceso
+    Process nuevoProceso = new Process(
+        Scheduler.getNextProcessID(), // Generar un ID único
+        nombre,
+        instrucciones,
+        isCPUBound,
+        cicloExcep,
+        duracionExcep,
+        prioridad,
+        baseMemoryAddress
+    );
+
+    // Agregar el proceso a la cola de listos en Scheduler
+    scheduler.addProcess(nuevoProceso);
+
+    // Mostrar mensaje de éxito
+    JOptionPane.showMessageDialog(this, "Proceso creado y agregado a la cola de listos.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+    // Limpiar los campos
+    nombreProceso.setText("");
+    totalInstrucciones.setValue(0);
+    cicloExcepcion.setValue(0);
+    duracionExcepcion.setValue(0);
+
+    // Actualizar la interfaz
+    actualizarColaListos();
+}
+    
+    private void actualizarColaListos() {
+    readyqueue.setText(scheduler.getReadyQueue().getAllProcesses());
+}
+    // metodo para manejar la habilitación/deshabilitación de los JSpinner
+    private void actualizarEstadoExcepcion() {
+    String tipo = (String) tipoProceso.getSelectedItem();
+    
+    boolean esIOBound = tipo.equals("I/O-bound");
+    
+    cicloExcepcion.setEnabled(esIOBound);
+    duracionExcepcion.setEnabled(esIOBound);
+
+    if (!esIOBound) {
+        cicloExcepcion.setValue(0);
+        duracionExcepcion.setValue(0);
+    }
+}
+
     private void configureCPUPanel(JPanel panel, String title) {
     panel.setLayout(new GridLayout(6, 1)); // Organiza los labels en una columna
     panel.removeAll(); // Elimina cualquier contenido anterior
@@ -187,12 +275,26 @@ public class Simulacion extends javax.swing.JFrame {
         jpanelcpu1 = new javax.swing.JPanel();
         jpanelcpu2 = new javax.swing.JPanel();
         jpanelcpu3 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        crear = new javax.swing.JButton();
+        nombreProceso = new javax.swing.JTextField();
+        totalInstrucciones = new javax.swing.JSpinner();
+        tipoProceso = new javax.swing.JComboBox<>();
+        cicloExcepcion = new javax.swing.JSpinner();
+        duracionExcepcion = new javax.swing.JSpinner();
+        prioridadProceso = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         guardar = new javax.swing.JButton();
         estadisticas = new javax.swing.JButton();
         graficos = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
+        cargar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -202,7 +304,7 @@ public class Simulacion extends javax.swing.JFrame {
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 30, -1, -1));
 
         jLabel2.setText("COLA DE TERMINADOS");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 450, -1, -1));
 
         exitqueue.setEditable(false);
         exitqueue.setColumns(20);
@@ -210,10 +312,10 @@ public class Simulacion extends javax.swing.JFrame {
         exitqueue.setFocusable(false);
         jScrollPane1.setViewportView(exitqueue);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 370, 450, -1));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 470, 590, 170));
 
         jLabel3.setText("POLÍTICA DE PLANIFICACION ACTUAL: ");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 490, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 30, -1, 20));
 
         readyqueue.setEditable(false);
         readyqueue.setColumns(20);
@@ -221,10 +323,10 @@ public class Simulacion extends javax.swing.JFrame {
         readyqueue.setFocusable(false);
         jScrollPane2.setViewportView(readyqueue);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 450, -1));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 590, 170));
 
         jLabel4.setText("COLA DE LISTOS");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, -1, -1));
 
         politicaPlanificacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         politicaPlanificacion.addActionListener(new java.awt.event.ActionListener() {
@@ -232,17 +334,17 @@ public class Simulacion extends javax.swing.JFrame {
                 politicaPlanificacionActionPerformed(evt);
             }
         });
-        jPanel1.add(politicaPlanificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 490, 180, -1));
+        jPanel1.add(politicaPlanificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 60, 180, -1));
 
         clockLabel.setText("CICLO DE RELOJ GLOBAL: 0");
-        jPanel1.add(clockLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 50, -1, -1));
-        jPanel1.add(tickDurationSpinner, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 70, -1, -1));
+        jPanel1.add(clockLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 30, -1, -1));
+        jPanel1.add(tickDurationSpinner, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 60, -1, -1));
 
         jLabel5.setText("(duración en ms)");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 80, -1, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 60, -1, -1));
 
         jLabel6.setText("COLA DE BLOQUEADOS");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, -1, -1));
 
         blockedqueue1.setEditable(false);
         blockedqueue1.setColumns(20);
@@ -250,18 +352,13 @@ public class Simulacion extends javax.swing.JFrame {
         blockedqueue1.setFocusable(false);
         jScrollPane3.setViewportView(blockedqueue1);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 230, 450, -1));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, 590, 170));
 
         cpulabel.setText("PROCESADORES DISPONIBLES:");
-        jPanel1.add(cpulabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 150, -1, -1));
+        jPanel1.add(cpulabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 120, -1, -1));
 
         cpus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cpus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cpusActionPerformed(evt);
-            }
-        });
-        jPanel1.add(cpus, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 180, -1, -1));
+        jPanel1.add(cpus, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 150, -1, -1));
 
         jpanelcpu1.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 1"));
 
@@ -276,7 +373,7 @@ public class Simulacion extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jpanelcpu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 220, -1, -1));
+        jPanel1.add(jpanelcpu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 190, -1, -1));
 
         jpanelcpu2.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 2"));
         jpanelcpu2.setToolTipText("");
@@ -292,7 +389,7 @@ public class Simulacion extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jpanelcpu2, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 220, -1, -1));
+        jPanel1.add(jpanelcpu2, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 190, -1, -1));
 
         jpanelcpu3.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 3"));
 
@@ -307,18 +404,62 @@ public class Simulacion extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jpanelcpu3, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 220, -1, -1));
-
-        jLabel7.setText("CREAR UN NUEVO PROCESO:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 380, -1, -1));
+        jPanel1.add(jpanelcpu3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 190, -1, -1));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("CREAR");
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 220, 130, -1));
+        crear.setText("CREAR");
+        crear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crearActionPerformed(evt);
+            }
+        });
+        jPanel2.add(crear, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 230, 130, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 360, 490, 260));
+        nombreProceso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nombreProcesoActionPerformed(evt);
+            }
+        });
+        jPanel2.add(nombreProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 40, 100, -1));
+        jPanel2.add(totalInstrucciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 60, -1));
+
+        tipoProceso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        tipoProceso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tipoProcesoActionPerformed(evt);
+            }
+        });
+        jPanel2.add(tipoProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, -1, -1));
+        jPanel2.add(cicloExcepcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(288, 140, 70, -1));
+        jPanel2.add(duracionExcepcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(198, 160, 70, -1));
+
+        prioridadProceso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel2.add(prioridadProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, -1, -1));
+
+        jLabel8.setText("Nombre del proceso:");
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, -1));
+
+        jLabel9.setText("Cantidad total de instrucciones:");
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, -1));
+
+        jLabel10.setText("Tipo de proceso:");
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, -1, -1));
+
+        jLabel11.setText("Ciclos en el que ocurrirá una excepción:");
+        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, -1, -1));
+
+        jLabel12.setText("Duración de la excepción:");
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
+
+        jLabel13.setText("Prioridad del proceso:");
+        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, -1, -1));
+
+        jLabel7.setText("CREAR UN NUEVO PROCESO:");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, -1, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 330, 380, 270));
 
         guardar.setText("GUARDAR");
         guardar.addActionListener(new java.awt.event.ActionListener() {
@@ -326,7 +467,7 @@ public class Simulacion extends javax.swing.JFrame {
                 guardarActionPerformed(evt);
             }
         });
-        jPanel1.add(guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 590, -1, -1));
+        jPanel1.add(guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 570, -1, -1));
 
         estadisticas.setText("ESTADÍSTICAS");
         estadisticas.addActionListener(new java.awt.event.ActionListener() {
@@ -334,7 +475,7 @@ public class Simulacion extends javax.swing.JFrame {
                 estadisticasActionPerformed(evt);
             }
         });
-        jPanel1.add(estadisticas, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 590, -1, -1));
+        jPanel1.add(estadisticas, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 610, -1, -1));
 
         graficos.setText("GRÁFICOS");
         graficos.addActionListener(new java.awt.event.ActionListener() {
@@ -342,13 +483,24 @@ public class Simulacion extends javax.swing.JFrame {
                 graficosActionPerformed(evt);
             }
         });
-        jPanel1.add(graficos, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, -1, -1));
+        jPanel1.add(graficos, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 610, -1, -1));
+
+        jLabel14.setText("(hacer guardar, graficos y stats)");
+        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 610, -1, -1));
+
+        cargar.setText("CARGAR");
+        cargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 530, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1195, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1252, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -377,9 +529,38 @@ public class Simulacion extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_graficosActionPerformed
 
-    private void cpusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpusActionPerformed
+    private void nombreProcesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreProcesoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cpusActionPerformed
+    }//GEN-LAST:event_nombreProcesoActionPerformed
+
+    private void crearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearActionPerformed
+       for (ActionListener al : crear.getActionListeners()) {
+    crear.removeActionListener(al);
+}
+        
+        crear.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        crearProceso();
+    }
+    });
+
+    }//GEN-LAST:event_crearActionPerformed
+
+    private void tipoProcesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoProcesoActionPerformed
+        tipoProceso.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        actualizarEstadoExcepcion();
+    }
+});
+
+    }//GEN-LAST:event_tipoProcesoActionPerformed
+
+    private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
+        CargarTXTfuncion.cargarDesdeArchivo(this);
+        actualizarColaListos();
+    }//GEN-LAST:event_cargarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -419,21 +600,31 @@ public class Simulacion extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea blockedqueue1;
+    private javax.swing.JButton cargar;
+    private javax.swing.JSpinner cicloExcepcion;
     private javax.swing.JLabel clockLabel;
     private javax.swing.JLabel cpulabel;
     private javax.swing.JComboBox<String> cpus;
+    private javax.swing.JButton crear;
+    private javax.swing.JSpinner duracionExcepcion;
     private javax.swing.JButton estadisticas;
     private javax.swing.JTextArea exitqueue;
     private javax.swing.JButton graficos;
     private javax.swing.JButton guardar;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -442,8 +633,12 @@ public class Simulacion extends javax.swing.JFrame {
     private javax.swing.JPanel jpanelcpu1;
     private javax.swing.JPanel jpanelcpu2;
     private javax.swing.JPanel jpanelcpu3;
+    private javax.swing.JTextField nombreProceso;
     private javax.swing.JComboBox<String> politicaPlanificacion;
+    private javax.swing.JComboBox<String> prioridadProceso;
     private javax.swing.JTextArea readyqueue;
     private javax.swing.JSpinner tickDurationSpinner;
+    private javax.swing.JComboBox<String> tipoProceso;
+    private javax.swing.JSpinner totalInstrucciones;
     // End of variables declaration//GEN-END:variables
 }

@@ -8,6 +8,9 @@ package EDD;
  *
  * @author cristiandresgp
  */
+
+import OBJECTS.Process;
+
 public class Queue {
     private Nodo head, tail;
     private int size;
@@ -82,6 +85,34 @@ public class Queue {
     }
     System.out.println("NULL");
 }
+    
+    public String getAllProcesses() {
+    StringBuilder result = new StringBuilder();
+    Nodo temp = head; // Empezar desde la cabeza de la cola
+
+    while (temp != null) {
+        if (temp.getElement() instanceof Process) { // Verificar que el elemento es un proceso
+            Process p = (Process) temp.getElement();
+            
+            // Calcular el porcentaje de progreso
+            double porcentaje = (p.getProgramCounter() / (double) p.getTotalInstructions()) * 100;
+            
+            result.append("ID: ").append(p.getProcessID())
+                  .append(", Nombre: ").append(p.getName())
+                  .append(", Prioridad: ").append(p.getPriority())
+                  .append(", Estado: ").append(p.getState())
+                  .append(", PC: ").append(p.getProgramCounter())
+                  .append(", MAR: ").append(p.getMemoryAddressRegister())
+                  .append(", Progreso: ").append(String.format("%.2f", porcentaje)).append("%")
+                  .append("\n");
+        }
+        temp = temp.getNext();
+    }
+
+    return result.toString();
+}
+
+
 
     
 }

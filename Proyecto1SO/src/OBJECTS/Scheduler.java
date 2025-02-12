@@ -16,6 +16,8 @@ public class Scheduler {
     private final Queue terminatedQueue;
     private String algorithm;
     private int quantum;
+    private static int processCounter = 1; // Contador global de procesos
+    private static int nextAvailableMemoryAddress = 0;  // Comienza en 0 y se incrementa
 
     public Scheduler(String algorithm, int quantum) {
         this.readyQueue = new Queue(); // Cola única de listos
@@ -77,4 +79,18 @@ public class Scheduler {
     public Queue getTerminatedQueue() {
         return terminatedQueue;
     }
+    
+
+    public static int getNextProcessID() {
+    return processCounter++;
+}
+
+    public static int getNextMemoryAddress() {
+        
+    int address = nextAvailableMemoryAddress;
+    nextAvailableMemoryAddress += 200;  // Asignamos un bloque de 200 unidades a cada proceso
+    return address;
+}
+
+
 }
