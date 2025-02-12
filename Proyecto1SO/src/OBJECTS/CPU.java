@@ -4,9 +4,9 @@
  */
 package OBJECTS;
 
-import GUI.CPUDisplay;
 import GUI.main;
 import GUI.Simulacion;
+import static OBJECTS.Process.ProcessState.RUNNING;
 import java.util.concurrent.Semaphore;
 
 public class CPU extends Thread {
@@ -17,35 +17,47 @@ public class CPU extends Thread {
     private volatile boolean running; // Al iniciar la CPU siempre esta running, este es el estado de ejecucion de la CPU
     private final Scheduler scheduler;
     private Clock clock;
-    private CPUDisplay cpuDisplay;
+    private Simulacion gui;
     
-    public CPU(int cpuId, Scheduler scheduler, Clock clock) {
+    public CPU(int cpuId, Scheduler scheduler, Clock clock, Simulacion gui) {
         this.cpuId = cpuId;
         this.currentProcess = null; // No se asigna ningun proceso inicialmente
         this.busy = true; // Al inicio esta activo
         this.running = true;
         this.cpuSemaphore = new Semaphore(1); //Inicializacion del semaforo
         this.scheduler = scheduler;
-        this.clock = clock;
-        this.cpuDisplay = cpuDisplay;
+        this.gui = gui;
     }
     
     // Cuando se asigna un proceso distinto es necesario que se vean los cambios en la interfaz grafica
     private void assignProcessInterfaceUpdate(Process process) {
         // x debe actualizar lo que sale en la interfaz con updateCPUDisplay();
         if (cpuId == 1) {
-            GUI.Simulacion.cpuDisplay1.updateCPUDisplay();
+           gui.actualizarCPU1();
         } else if (cpuId == 2) {
-            GUI.Simulacion.cpuDisplay2.updateCPUDisplay();
+            gui.actualizarCPU2();
         } else {
-            GUI.Simulacion.cpuDisplay3.updateCPUDisplay();
+            gui.actualizarCPU3();
         }
     }
-
     
+    // Cuando se termina un proceso es necesario que se vean los cambios en la interfaz grafica
+    private void terminateProcessInterfaceUpdate() {
+        // cuando se termina un proceso, en la interfaz de esa CPU se debe mostrar como que ningun proceso se esta ejecutando en ese momento
+        if (cpuId == 1) {
+            gui.liberarCPU1();
+        } else if (cpuId == 2) {
+            gui.liberarCPU2();
+        } else {
+            gui.liberarCPU3();
+        }
+      currentProcess = null;
+    }
+        
     //Ejecuta la logica de la CPU
     @Override
     public void run() {
+        //CPU se esta ejecutando`
         while (running) {
             try {
                 // Se adquiere el semáforo antes de acceder a la cola de listos
@@ -88,11 +100,11 @@ public class CPU extends Thread {
     // Ejecuta el proceso actual
     private void runProcess() {
         try {
-            currentProcess.setState("RUNNING");
+            currentProcess.setState(RUNNING);
             assignProcessInterfaceUpdate(currentProcess);
 
             int cycleDuration = GUI.Simulacion.clock.getCurrentCycle();
-            Thread.sleep(cycleDuration * 1000L);  // Simula la ejecución de instrucciones
+            Thread.sleep(cycleDuration * 1000L);  // Simula la ejecución de instrucciones en un ciclo
 
             currentProcess.setProgramCounter(currentProcess.getProgramCounter() + 1);
             currentProcess.setMemoryAddressRegister(currentProcess.getMemoryAddressRegister() + 1);
@@ -109,17 +121,6 @@ public class CPU extends Thread {
             Thread.currentThread().interrupt();
         }
     }  
-    // Cuando se termina un proceso es necesario que se vean los cambios en la interfaz grafica
-    private void terminateProcessInterfaceUpdate() {
-        // cuando se termina un proceso, en la interfaz de esa CPU se debe mostrar como que ningun proceso se esta ejecutando en ese momento
-        if (cpuId == 1) {
-            //x
-        } else if (cpuId == 2) {
-            //x
-        } else {
-            //x
-        }
-    }
 
     public void stopCPU() {
         running = false;
