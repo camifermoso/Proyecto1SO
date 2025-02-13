@@ -56,22 +56,43 @@ public class Queue {
             setTail(nodo);
         }
         size++;
+        System.out.println("Proceso agregado a la cola: " + element);
+        System.out.println("Estado actual de la cola: " + this);
     }
+//    
+//    public Object dequeue() {
+//        if (isEmpty()) {
+//            System.out.println("La cola esta vacía");
+//            return null;
+//        } else {
+//            Object element = head.getElement();
+//            head = head.getNext();
+//            if (head == null) {  
+//            tail = null;  // Si la cola queda vacía, tail también debe actualizarse
+//            }
+//            size--;
+//            return element;
+//        }
+//        
+//    }
+    
     public Object dequeue() {
-        if (isEmpty()) {
-            System.out.println("La cola esta vacía");
-            return null;
-        } else {
-            Object element = head.getElement();
-            head = head.getNext();
-            if (head == null) {  
+    if (isEmpty()) {
+        System.out.println("La cola está vacía, no se puede hacer dequeue.");
+        return null;
+    } else {
+        Object element = head.getElement();
+        head = head.getNext();
+        if (head == null) {  
             tail = null;  // Si la cola queda vacía, tail también debe actualizarse
-            }
-            size--;
-            return element;
         }
-        
+        size--;
+        System.out.println(" Proceso eliminado de la cola: " + element);
+        System.out.println(" Estado actual de la cola: " + this);
+        return element;
     }
+}
+
     
     public boolean isEmpty() {
         return getHead() == null;
@@ -111,7 +132,21 @@ public class Queue {
 
     return result.toString();
 }
+    
+@Override
+public String toString() {
+    StringBuilder sb = new StringBuilder("[ ");
+    Nodo current = head;
+    while (current != null) {
+        sb.append(current.getElement().toString()).append(" ");
+        current = current.getNext();
+        if (current != null) sb.append("-> ");
+    }
+    sb.append("]");
+    return sb.toString();
+}
 
+    
 
 
     

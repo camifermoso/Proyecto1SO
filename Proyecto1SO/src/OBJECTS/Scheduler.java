@@ -20,7 +20,7 @@ public class Scheduler {
     private static int processCounter = 1; // Contador global de procesos
     private static int nextAvailableMemoryAddress = 0;  // Comienza en 0 y se incrementa
     
-    private final Semaphore schedulerSemaphore = new Semaphore(1, true); // Exclusion mutua en asignacion
+//    private final Semaphore assignmentSemaphore = new Semaphore(1, true); // Exclusion mutua en asignacion
     
     public Scheduler(String algorithm, int quantum) {
         this.readyQueue = new Queue(); // Cola única de listos
@@ -31,8 +31,61 @@ public class Scheduler {
 
     public void addProcess(Process p) {
         readyQueue.enqueue(p);
+        System.out.println("Proceso agregado: " + p.getName());
+        System.out.println(" Estado de la cola de listos antes de obtener un proceso: " + readyQueue.toString());
+
     }
 
+//    public Process getNextProcess(Process currentProcess, int currentTime) {
+////        assignmentSemaphore.tryAcquire(); // Bloquea la asignacion de procesos mientras se selecciona uno
+//        if (readyQueue.isEmpty()) {
+//            System.out.println("La cola de listos está vacía.");
+//            return null;
+//        }
+//        Process nextProcess = null;
+//        while (!readyQueue.isEmpty()) {
+//            switch (algorithm) {
+//                case "FCFS":
+//                    nextProcess = SchedulingAlgorithms.FCFS(readyQueue);
+//                    break;
+//                case "RoundRobin":
+//                    nextProcess = SchedulingAlgorithms.RoundRobin(readyQueue, quantum);
+//                    break;
+//                case "SPN":
+//                    nextProcess = SchedulingAlgorithms.SPN(readyQueue);
+//                    break;
+//                case "SRT":
+//                    nextProcess = SchedulingAlgorithms.SRT(readyQueue, currentProcess);
+//                    break;
+//                case "HRRN":
+//                    nextProcess = SchedulingAlgorithms.HRRN(readyQueue, currentTime);
+//                    break;
+//                default:
+//                    nextProcess = null;
+//            }
+//            
+//            // Si el proceso ya está ejecutando, buscar otro
+//            if (nextProcess != null && nextProcess.isExecuting()) {
+//                nextProcess = null;
+//            } else {
+//                break;
+//            }
+//        }
+//        if (nextProcess != null) {
+//            if (!nextProcess.isExecuting()) {
+//                nextProcess.setExecuting(true);
+//                System.out.println("Proceso asignado: " + nextProcess.getName());
+//                return nextProcess;
+//            } else {
+//                System.out.println("El proceso " + nextProcess.getName() + " ya está en ejecución, buscando otro...");
+//                return getNextProcess(currentProcess, currentTime); // Intenta con otro proceso
+//            }
+//            
+//        }
+////        assignmentSemaphore.release(); // ?Libera el semaforo después de asignar el proceso
+//        return nextProcess;
+//    }
+    
     public Process getNextProcess(Process currentProcess, int currentTime) {
         if (readyQueue.isEmpty()) return null;
 
