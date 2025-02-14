@@ -76,7 +76,7 @@ public Process getNextProcess(Process currentProcess, int currentTime) {
             case "RoundRobin":
                 nextProcess = SchedulingAlgorithms.RoundRobin(readyQueue, quantum);
                 break;
-            case "SPN":
+            case "SJF":
                 nextProcess = SchedulingAlgorithms.SPN(readyQueue);
                 break;
             case "SRT":
