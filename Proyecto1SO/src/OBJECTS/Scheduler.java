@@ -10,9 +10,13 @@ package OBJECTS;
  */
 import FUNCTIONS.SchedulingAlgorithms;
 import EDD.Queue;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 public class Scheduler {
+    private Queue listaProcesos; // Estructura auxiliar para guardar los procesos admitidos
     private final Queue readyQueue;
     private final Queue terminatedQueue;
     private String algorithm;
@@ -46,6 +50,7 @@ public class Scheduler {
     }
     
     public Scheduler(String algorithm, int quantum) {
+        this.listaProcesos = new Queue();
         this.readyQueue = new Queue(); // Cola única de listos
         this.terminatedQueue = new Queue(); // Cola de terminados
         this.algorithm = algorithm;
@@ -53,6 +58,7 @@ public class Scheduler {
     }
 
     public void addProcess(Process p) {
+        listaProcesos.enqueue(p); // Guardar en la estructura auxiliar
         readyQueue.enqueue(p);
     }
 
@@ -135,6 +141,30 @@ public void moveProcessToBlocked(Process process) {
     System.out.println("Proceso " + process.getName() + " movido a bloqueados.");
 }
 
+public void guardarProcesosEnTXT(String filePath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write("NOMBRE,INSTRUCCIONES,CPU_BOUND,CICLO_EXCEP,DURACION_EXCEP,PRIORIDAD\n");
+
+            Queue tempQueue = new Queue();
+            while (!listaProcesos.isEmpty()) {
+                Process process = (Process) listaProcesos.dequeue();
+                writer.write(
+                    process.getName() + "," +
+                    process.getTotalInstructions() + "," +
+                    process.isCPUBound() + "," +
+                    process.getExceptionCycle() + "," +
+                    process.getExceptionDuration() + "," +
+                    process.getPriority() + "\n"
+                );
+                tempQueue.enqueue(process); // Mantener los procesos en la estructura
+            }
+            listaProcesos = tempQueue;
+
+            System.out.println("[INFO] Procesos guardados en " + filePath);
+        } catch (IOException e) {
+            System.out.println("[ERROR] No se pudo guardar el archivo: " + e.getMessage());
+        }
+    }
 
 
 }
