@@ -10,10 +10,8 @@ package GUI;
  */
 public class FuncionesInterfaz {
     private static final Bienvenida bienvenida= new Bienvenida(); 
-    private static final CargarTXT cargartxt =new CargarTXT();
     private static final Estadisticas estadisticas= new Estadisticas();
     private static final Graficos graficos= new Graficos();
-    private static final Guardar guardar= new Guardar();
     private static Simulacion simulacion;
 
 
@@ -23,14 +21,6 @@ public class FuncionesInterfaz {
     
     public static void openBienvenida() {
         getBienvenida().setVisible(true);
-    }
-
-    public static CargarTXT getCargartxt() {
-        return cargartxt;
-    }
-    
-    public static void openCargartxt() {
-        getCargartxt().setVisible(true);
     }
 
     public static Estadisticas getEstadisticas() {
@@ -49,14 +39,6 @@ public class FuncionesInterfaz {
         getGraficos().setVisible(true);
     }
 
-    public static Guardar getGuardar() {
-        return guardar;
-    }
-    
-    public static void openGuardar() {
-        getGuardar().setVisible(true);
-    }
-
     public static Simulacion getSimulacion() {
         return simulacion;
     }
@@ -70,9 +52,7 @@ public class FuncionesInterfaz {
        //Muestro el menu principal
         getSimulacion().setVisible(true);
         //Hago que las ventanas abiertas ya no se muestren
-        getCargartxt().setVisible(false);
         getEstadisticas().setVisible(false);
-        getGuardar().setVisible(false);
         getGraficos().setVisible(false);
    }
     

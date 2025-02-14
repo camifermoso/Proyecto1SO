@@ -701,8 +701,22 @@ public void actualizarColaTerminados() {
     }//GEN-LAST:event_politicaPlanificacionActionPerformed
 
     private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
-        FuncionesInterfaz.openGuardar();
-        this.setVisible(false);
+
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Guardar Procesos");
+    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+    int userSelection = fileChooser.showSaveDialog(this);
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+        String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+        if (!filePath.endsWith(".txt")) {
+            filePath += ".txt"; // Asegurar que el archivo tenga la extensión .txt
+        }
+        scheduler.guardarProcesosEnTXT(filePath);
+        JOptionPane.showMessageDialog(this, "Procesos guardados correctamente en:\n" + filePath);
+    }
+
+
     }//GEN-LAST:event_guardarActionPerformed
 
     private void estadisticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadisticasActionPerformed
