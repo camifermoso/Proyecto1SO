@@ -137,6 +137,8 @@ public class Simulacion extends javax.swing.JFrame {
         cpu3mar.setText(cpu3.getCurrentProcess() != null ? String.valueOf(cpu3.getCurrentProcess().getMemoryAddressRegister()) : "No Disponible");
     }   
     
+    // hola 
+    
     // Cuando se libera un proceso y la CPU esta libre, se debe actualizar la interfaz
     public void liberarCPU1() {
         cpu1nombre.setText("Sin proceso");
@@ -412,6 +414,9 @@ public void actualizarColaTerminados() {
         cpu3id = new javax.swing.JLabel();
         cpu3estado = new javax.swing.JLabel();
         cpu3pc = new javax.swing.JLabel();
+        osCPU1 = new javax.swing.JPanel();
+        osCPU2 = new javax.swing.JPanel();
+        osCPU3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -682,6 +687,18 @@ public void actualizarColaTerminados() {
 
         jPanel1.add(jpanelcpu3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 190, 250, 130));
 
+        osCPU1.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 1"));
+        osCPU1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(osCPU1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 100, 250, 80));
+
+        osCPU2.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 2"));
+        osCPU2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(osCPU2, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 100, 250, 80));
+
+        osCPU3.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 3"));
+        osCPU3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(osCPU3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 100, 250, 80));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -864,6 +881,9 @@ public void actualizarColaTerminados() {
     private javax.swing.JPanel jpanelcpu2;
     private javax.swing.JPanel jpanelcpu3;
     private javax.swing.JTextField nombreProceso;
+    private javax.swing.JPanel osCPU1;
+    private javax.swing.JPanel osCPU2;
+    private javax.swing.JPanel osCPU3;
     private javax.swing.JComboBox<String> politicaPlanificacion;
     private javax.swing.JComboBox<String> prioridadProceso;
     private javax.swing.JTextArea readyqueue;

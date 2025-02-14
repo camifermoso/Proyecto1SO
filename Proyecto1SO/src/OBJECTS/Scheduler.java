@@ -23,6 +23,7 @@ public class Scheduler {
     private int quantum;
     private static int processCounter = 1; // Contador global de procesos
     private static int nextAvailableMemoryAddress = 0;  // Comienza en 0 y se incrementa
+
     private final Semaphore schedulerSemaphore = new Semaphore(1, true);
 
     public int getQuantum() {
@@ -60,7 +61,11 @@ public class Scheduler {
     public void addProcess(Process p) {
         listaProcesos.enqueue(p); // Guardar en la estructura auxiliar
         readyQueue.enqueue(p);
+        System.out.println("Proceso agregado: " + p.getName());
+        System.out.println(" Estado de la cola de listos antes de obtener un proceso: " + readyQueue.toString());
+
     }
+
 
 
 public Process getNextProcess(Process currentProcess, int currentTime) {

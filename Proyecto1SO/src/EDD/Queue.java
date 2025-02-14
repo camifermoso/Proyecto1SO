@@ -56,7 +56,26 @@ public class Queue {
             setTail(nodo);
         }
         size++;
+        System.out.println("Proceso agregado a la cola: " + element);
+        System.out.println("Estado actual de la cola: " + this);
     }
+//    
+//    public Object dequeue() {
+//        if (isEmpty()) {
+//            System.out.println("La cola esta vacía");
+//            return null;
+//        } else {
+//            Object element = head.getElement();
+//            head = head.getNext();
+//            if (head == null) {  
+//            tail = null;  // Si la cola queda vacía, tail también debe actualizarse
+//            }
+//            size--;
+//            return element;
+//        }
+//        
+//    }
+    
     public Object dequeue() {
         if (isEmpty()) {
             System.out.println("[ERROR] Se intentó extraer de una cola vacía.");
@@ -66,12 +85,14 @@ public class Queue {
             head = head.getNext();
             if (head == null) {  
             tail = null;  // Si la cola queda vacía, tail también debe actualizarse
-            }
-            size--;
-            return element;
         }
-        
+        size--;
+        System.out.println(" Proceso eliminado de la cola: " + element);
+        System.out.println(" Estado actual de la cola: " + this);
+        return element;
     }
+}
+
     
     public boolean isEmpty() {
         return getHead() == null;
@@ -113,6 +134,7 @@ public class Queue {
     return result.toString();
 }
     
+
     public String getBlockedProcesses() {
         StringBuilder result = new StringBuilder();
         Nodo temp = head;
@@ -154,6 +176,7 @@ public class Queue {
         return result.toString();
     }
 
+    
 
 
     
