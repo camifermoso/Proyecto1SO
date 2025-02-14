@@ -18,12 +18,21 @@ import OBJECTS.Process;
  */
 public class SchedulingAlgorithms {
 
+    private static int cpuCount = 2; // Default CPUs, updated before simulation starts
+
+    public static void setCPUCount(int count) {
+        cpuCount = count;
+    }
+
+    public static int getCPUCount() {
+        return cpuCount;
+    }
+
     // First-Come, First-Served (FCFS)
     public static Process FCFS(Queue readyQueue) {
-        if (readyQueue.isEmpty()) return null;
         return (Process) readyQueue.dequeue();
     }
-    
+
     // Round Robin
     public static Process RoundRobin(Queue readyQueue, int quantum) {
         if (readyQueue.isEmpty()) return null;
@@ -35,7 +44,7 @@ public class SchedulingAlgorithms {
         }
         return process;
     }
-    
+
     // Shortest Process Next (SPN)
     public static Process SPN(Queue readyQueue) {
         LinkedList tempList = new LinkedList();
@@ -59,7 +68,7 @@ public class SchedulingAlgorithms {
         }
         return shortest;
     }
-    
+
     // Shortest Remaining Time (SRT)
     public static Process SRT(Queue readyQueue, Process currentProcess) {
         LinkedList tempList = new LinkedList();
@@ -83,7 +92,7 @@ public class SchedulingAlgorithms {
         }
         return shortestRemaining;
     }
-    
+
     // Highest Response Ratio Next (HRRN)
     public static Process HRRN(Queue readyQueue, int currentTime) {
         LinkedList tempList = new LinkedList();
