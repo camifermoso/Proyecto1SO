@@ -59,7 +59,7 @@ public class Queue {
     }
     public Object dequeue() {
         if (isEmpty()) {
-            System.out.println("La cola esta vacía");
+            System.out.println("[ERROR] Se intentó extraer de una cola vacía.");
             return null;
         } else {
             Object element = head.getElement();
@@ -99,6 +99,7 @@ public class Queue {
             
             result.append("ID: ").append(p.getProcessID())
                   .append(", Nombre: ").append(p.getName())
+                    .append(", Tipo: ").append(p.getTipo())
                   .append(", Prioridad: ").append(p.getPriority())
                   .append(", Estado: ").append(p.getState())
                   .append(", PC: ").append(p.getProgramCounter())
@@ -111,6 +112,47 @@ public class Queue {
 
     return result.toString();
 }
+    
+    public String getBlockedProcesses() {
+        StringBuilder result = new StringBuilder();
+        Nodo temp = head;
+    
+        while (temp != null) {
+            if (temp.getElement() instanceof Process) {
+                Process p = (Process) temp.getElement();
+                double porcentaje = (p.getExecutedInstructions() / (double) p.getTotalInstructions()) * 100;
+    
+                result.append("ID: ").append(p.getProcessID())
+                      .append(", Nombre: ").append(p.getName())
+                      .append(", Tipo: ").append(p.getTipo())
+                      .append(", Prioridad: ").append(p.getPriority())
+                      .append(", Estado: ").append(p.getState())
+                      .append(", PC: ").append(p.getProgramCounter())
+                      .append(", MAR: ").append(p.getMemoryAddressRegister())
+                      .append(", Progreso: ").append(String.format("%.2f", porcentaje)).append("%\n");
+            }
+            temp = temp.getNext();
+        }
+        return result.toString();
+    }
+    
+    public String getTerminatedProcesses() {
+        StringBuilder result = new StringBuilder();
+        Nodo temp = head;
+    
+        while (temp != null) {
+            if (temp.getElement() instanceof Process) {
+                Process p = (Process) temp.getElement();
+                result.append("ID: ").append(p.getProcessID())
+                      .append(", Nombre: ").append(p.getName())
+                      .append(", Tipo: ").append(p.isCPUBound() ? "CPU-Bound" : "I/O-Bound")
+                      .append(", Estado: ").append(p.getState())
+                      .append(", Progreso: 100%\n"); // Siempre 100% porque está en Terminados
+            }
+            temp = temp.getNext();
+        }
+        return result.toString();
+    }
 
 
 

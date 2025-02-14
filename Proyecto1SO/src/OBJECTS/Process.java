@@ -25,6 +25,8 @@ public class Process {
     private int programCounter;
     private int memoryAddressRegister;
     private int baseMemoryAddress;  // Dirección base en memoria del proceso
+    private int blockedStartTime; // Ciclo en el que el proceso fue bloqueado
+
 
 
     public Process(int processID, String name, int totalInstructions, boolean isCPUBound, 
@@ -53,6 +55,14 @@ public class Process {
         if (executedInstructions >= totalInstructions) {
             this.state = ProcessState.TERMINATED;
         }
+    }
+
+    public int getBaseMemoryAddress() {
+        return baseMemoryAddress;
+    }
+
+    public void setBaseMemoryAddress(int baseMemoryAddress) {
+        this.baseMemoryAddress = baseMemoryAddress;
     }
 
     public int getTotalInstructions() {
@@ -94,6 +104,10 @@ public class Process {
     public boolean isCPUBound() {
         return isCPUBound;
     }
+    
+    public boolean isIOBound() {
+    return !isCPUBound;
+}
 
     public int getExceptionCycle() {
         return exceptionCycle;
@@ -142,6 +156,22 @@ public class Process {
     public void setMemoryAddressRegister(int memoryAddressRegister) {
         this.memoryAddressRegister = memoryAddressRegister;
     }
+    
+    public int getBlockedStartTime() {
+    return blockedStartTime;
+}
+
+public void setBlockedStartTime(int blockedStartTime) {
+    this.blockedStartTime = blockedStartTime;
+}
+
+    public Object getTipo(){
+    if (isCPUBound()) {
+        return "CPU-Bound";
+    }
+    else {
+        return "I/O-Bound";
+    }}
 }
 
 
