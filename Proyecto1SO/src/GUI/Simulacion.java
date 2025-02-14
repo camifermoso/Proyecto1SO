@@ -23,7 +23,7 @@ import java.awt.event.ActionEvent;
 public class Simulacion extends javax.swing.JFrame {
     public static Clock clock;
     public static Scheduler scheduler;
-    private ExceptionHandler exceptionHandler;
+    public ExceptionHandler exceptionHandler;
     private boolean running = true; // Control del hilo de actualización
     public CPU cpu1, cpu2, cpu3;
     private boolean cpu3Active = true;
@@ -72,7 +72,10 @@ public class Simulacion extends javax.swing.JFrame {
         }).start();
     }
    
-    
+    public ExceptionHandler getExceptionHandler() {
+    return exceptionHandler;
+}
+
     /**
      * Inicializa los elementos personalizados
      */
@@ -286,6 +289,14 @@ public class Simulacion extends javax.swing.JFrame {
     public void actualizarColaListos() {
     readyqueue.setText(scheduler.getReadyQueue().getAllProcesses());
 }
+    public void actualizarColaBloqueados() {
+    blockedqueue1.setText(exceptionHandler.hasBlockedProcesses() ? exceptionHandler.getBlockedQueue().getBlockedProcesses() : "No hay procesos bloqueados");
+}
+
+public void actualizarColaTerminados() {
+    exitqueue.setText(!scheduler.getTerminatedQueue().isEmpty() ? scheduler.getTerminatedQueue().getTerminatedProcesses() : "No hay procesos terminados");
+}
+
     // metodo para manejar la habilitación/deshabilitación de los JSpinner
     private void actualizarEstadoExcepcion() {
     String tipo = (String) tipoProceso.getSelectedItem();
