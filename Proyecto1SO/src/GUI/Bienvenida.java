@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import FUNCTIONS.SchedulingAlgorithms;
+
 /**
  *
  * @author cristiandresgp
@@ -15,6 +17,8 @@ public class Bienvenida extends javax.swing.JFrame {
      */
     public Bienvenida() {
         initComponents();
+        cantidadDeCPUs.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3" }));
+
     }
 
     /**
@@ -29,6 +33,8 @@ public class Bienvenida extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         botonSimulacion = new javax.swing.JButton();
+        cantidadDeCPUs = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,6 +51,17 @@ public class Bienvenida extends javax.swing.JFrame {
         });
         jPanel1.add(botonSimulacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, -1, -1));
 
+        cantidadDeCPUs.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cantidadDeCPUs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cantidadDeCPUsActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cantidadDeCPUs, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 150, -1));
+
+        jLabel2.setText("Escoja una cantidad de CPUs:");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -60,9 +77,18 @@ public class Bienvenida extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSimulacionActionPerformed
-        FuncionesInterfaz.openSimulacion();
-        this.setVisible(false);
+        int numCPUs = Integer.parseInt(cantidadDeCPUs.getSelectedItem().toString());
+    SchedulingAlgorithms.setCPUCount(numCPUs);
+
+    Simulacion simulacion = new Simulacion(numCPUs);
+    simulacion.setVisible(true);
+    
+    this.setVisible(false);
     }//GEN-LAST:event_botonSimulacionActionPerformed
+
+    private void cantidadDeCPUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cantidadDeCPUsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cantidadDeCPUsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -101,7 +127,9 @@ public class Bienvenida extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonSimulacion;
+    private javax.swing.JComboBox<String> cantidadDeCPUs;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

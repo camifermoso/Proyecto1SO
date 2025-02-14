@@ -39,20 +39,27 @@ public class Clock { //Administra el ciclo de reloj global.
     }
     
     public void startClock() {
-        running = true;
-        new Thread(() -> {
-            while (running) {
-                try {
-                    Thread.sleep(tickDuration);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-                tick();
-                System.out.println("Ciclo de reloj: " + currentCycle);
+    running = true;
+    new Thread(() -> {
+        while (running) {
+            try {
+                Thread.sleep(tickDuration);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
             }
-        }).start();
-    }
+            tick(); // Incrementar el ciclo de reloj
+            System.out.println("Ciclo de reloj: " + currentCycle);
+            
+            synchronized (this) {
+                notifyAll(); // 🔹 Notificar a todas las CPUs que hay un nuevo ciclo de reloj
+            }
+        }
+    }).start();
+}
+
+
+
     
     public void stopClock() {
         running = false;

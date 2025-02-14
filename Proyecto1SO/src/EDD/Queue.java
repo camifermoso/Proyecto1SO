@@ -77,13 +77,13 @@ public class Queue {
 //    }
     
     public Object dequeue() {
-    if (isEmpty()) {
-        System.out.println("La cola está vacía, no se puede hacer dequeue.");
-        return null;
-    } else {
-        Object element = head.getElement();
-        head = head.getNext();
-        if (head == null) {  
+        if (isEmpty()) {
+            System.out.println("[ERROR] Se intentó extraer de una cola vacía.");
+            return null;
+        } else {
+            Object element = head.getElement();
+            head = head.getNext();
+            if (head == null) {  
             tail = null;  // Si la cola queda vacía, tail también debe actualizarse
         }
         size--;
@@ -120,6 +120,7 @@ public class Queue {
             
             result.append("ID: ").append(p.getProcessID())
                   .append(", Nombre: ").append(p.getName())
+                    .append(", Tipo: ").append(p.getTipo())
                   .append(", Prioridad: ").append(p.getPriority())
                   .append(", Estado: ").append(p.getState())
                   .append(", PC: ").append(p.getProgramCounter())
@@ -133,18 +134,47 @@ public class Queue {
     return result.toString();
 }
     
-@Override
-public String toString() {
-    StringBuilder sb = new StringBuilder("[ ");
-    Nodo current = head;
-    while (current != null) {
-        sb.append(current.getElement().toString()).append(" ");
-        current = current.getNext();
-        if (current != null) sb.append("-> ");
+
+    public String getBlockedProcesses() {
+        StringBuilder result = new StringBuilder();
+        Nodo temp = head;
+    
+        while (temp != null) {
+            if (temp.getElement() instanceof Process) {
+                Process p = (Process) temp.getElement();
+                double porcentaje = (p.getExecutedInstructions() / (double) p.getTotalInstructions()) * 100;
+    
+                result.append("ID: ").append(p.getProcessID())
+                      .append(", Nombre: ").append(p.getName())
+                      .append(", Tipo: ").append(p.getTipo())
+                      .append(", Prioridad: ").append(p.getPriority())
+                      .append(", Estado: ").append(p.getState())
+                      .append(", PC: ").append(p.getProgramCounter())
+                      .append(", MAR: ").append(p.getMemoryAddressRegister())
+                      .append(", Progreso: ").append(String.format("%.2f", porcentaje)).append("%\n");
+            }
+            temp = temp.getNext();
+        }
+        return result.toString();
     }
-    sb.append("]");
-    return sb.toString();
-}
+    
+    public String getTerminatedProcesses() {
+        StringBuilder result = new StringBuilder();
+        Nodo temp = head;
+    
+        while (temp != null) {
+            if (temp.getElement() instanceof Process) {
+                Process p = (Process) temp.getElement();
+                result.append("ID: ").append(p.getProcessID())
+                      .append(", Nombre: ").append(p.getName())
+                      .append(", Tipo: ").append(p.isCPUBound() ? "CPU-Bound" : "I/O-Bound")
+                      .append(", Estado: ").append(p.getState())
+                      .append(", Progreso: 100%\n"); // Siempre 100% porque está en Terminados
+            }
+            temp = temp.getNext();
+        }
+        return result.toString();
+    }
 
     
 

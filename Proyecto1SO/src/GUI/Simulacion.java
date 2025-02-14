@@ -23,7 +23,7 @@ import java.awt.event.ActionEvent;
 public class Simulacion extends javax.swing.JFrame {
     public static Clock clock;
     public static Scheduler scheduler;
-    private ExceptionHandler exceptionHandler;
+    public ExceptionHandler exceptionHandler;
     private boolean running = true; // Control del hilo de actualización
     public CPU cpu1, cpu2, cpu3;
     private boolean cpu3Active = true;
@@ -31,24 +31,30 @@ public class Simulacion extends javax.swing.JFrame {
     /**
      * Constructor
      */
-    public Simulacion() {      
+    public Simulacion(int numCPUs) {      
         initComponents();
         clock = new Clock();
         scheduler = new Scheduler("FCFS", 5); // Iniciar con política predeterminada
         exceptionHandler = new ExceptionHandler();
-        cpu1 = new CPU(1, scheduler, clock, this);
-        cpu2 = new CPU(2, scheduler, clock, this);
-        cpu3 = new CPU(3, scheduler, clock, this);
         customInit();  // Inicializa los elementos visuales
 //        createCPUDisplays(); // Crea los paneles para los CPUs
-        clock.startClock(); // Inicia el reloj una vez que la interfaz está lista
-        actualizarColaListos();
-        
-        // Iniciar los hilos de CPU (IMPORTANTE: Debe estar dentro del constructor)
+        // Crear CPUs según la cantidad seleccionada
+        cpu1 = new CPU(1, scheduler, clock, this);
+        cpu2 = new CPU(2, scheduler, clock, this);
+    
+        if (numCPUs == 3) {
+        cpu3 = new CPU(3, scheduler, clock, this);
+        cpu3.start();
+    } else {
+        cpu3 = null; // No instanciar si se seleccionaron solo 2 CPUs
+        jpanelcpu3.setVisible(false); // Ocultar el panel de CPU 3
+    }
+
         cpu1.start();
         cpu2.start();
-        cpu3.start();
-    
+        clock.startClock(); // Inicia el reloj una vez que la interfaz está lista
+        actualizarColaListos();
+
         // Hilo para actualizar el ciclo de reloj en la interfaz
         new Thread(() -> {
             while (running) {
@@ -66,7 +72,10 @@ public class Simulacion extends javax.swing.JFrame {
         }).start();
     }
    
-    
+    public ExceptionHandler getExceptionHandler() {
+    return exceptionHandler;
+}
+
     /**
      * Inicializa los elementos personalizados
      */
@@ -91,15 +100,6 @@ public class Simulacion extends javax.swing.JFrame {
             String selectedPolicy = (String) politicaPlanificacion.getSelectedItem();
             scheduler.setAlgorithm(selectedPolicy);
             System.out.println("Política de planificación cambiada a: " + selectedPolicy);
-        });
-
-        // Configurar el JComboBox de CPUs disponibles
-        cpus.setModel(new DefaultComboBoxModel<>(new String[]{"3", "2"}));
-        cpus.addActionListener(e -> {
-            int selectedCPUs = Integer.parseInt((String) cpus.getSelectedItem());
-            cpu3Active = (selectedCPUs == 3);
-            jpanelcpu3.setVisible(cpu3Active);
-            System.out.println("Cantidad de CPUs activas: " + selectedCPUs);
         });
         
         // Definir opciones en los JComboBox
@@ -155,12 +155,15 @@ public class Simulacion extends javax.swing.JFrame {
     }
         
         public void liberarCPU3() {
+        if (cpu3 != null) {
         cpu3nombre.setText("Sin proceso");
         cpu3id.setText("-");
         cpu3estado.setText("-");
         cpu3pc.setText("-");
         cpu3mar.setText("-");
     }
+}
+
     
     // cuando se termina un proceso, en la interfaz de esa CPU se debe mostrar como que ningun proceso se esta ejecutando en ese momento
     
@@ -200,10 +203,11 @@ public class Simulacion extends javax.swing.JFrame {
      * Método para actualizar la interfaz de los CPUs
      */
     private void updateCPUsDisplay() {
-        jpanelcpu1.setVisible(true);
-        jpanelcpu2.setVisible(true);
-        jpanelcpu3.setVisible(cpu3Active);
-    }
+    jpanelcpu1.setVisible(true);
+    jpanelcpu2.setVisible(true);
+    jpanelcpu3.setVisible(cpu3 != null); // Ocultar si cpu3 no existe
+}
+
     
     
     ////////
@@ -285,6 +289,14 @@ public class Simulacion extends javax.swing.JFrame {
     public void actualizarColaListos() {
     readyqueue.setText(scheduler.getReadyQueue().getAllProcesses());
 }
+    public void actualizarColaBloqueados() {
+    blockedqueue1.setText(exceptionHandler.hasBlockedProcesses() ? exceptionHandler.getBlockedQueue().getBlockedProcesses() : "No hay procesos bloqueados");
+}
+
+public void actualizarColaTerminados() {
+    exitqueue.setText(!scheduler.getTerminatedQueue().isEmpty() ? scheduler.getTerminatedQueue().getTerminatedProcesses() : "No hay procesos terminados");
+}
+
     // metodo para manejar la habilitación/deshabilitación de los JSpinner
     private void actualizarEstadoExcepcion() {
     String tipo = (String) tipoProceso.getSelectedItem();
@@ -347,8 +359,6 @@ public class Simulacion extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         blockedqueue1 = new javax.swing.JTextArea();
-        cpulabel = new javax.swing.JLabel();
-        cpus = new javax.swing.JComboBox<>();
         jpanelcpu1 = new javax.swing.JPanel();
         jLabel20 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
@@ -460,17 +470,6 @@ public class Simulacion extends javax.swing.JFrame {
         jScrollPane3.setViewportView(blockedqueue1);
 
         jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, 590, 170));
-
-        cpulabel.setText("PROCESADORES DISPONIBLES:");
-        jPanel1.add(cpulabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 120, -1, -1));
-
-        cpus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cpus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cpusActionPerformed(evt);
-            }
-        });
-        jPanel1.add(cpus, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 150, -1, -1));
 
         jpanelcpu1.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 1"));
         jpanelcpu1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -702,8 +701,22 @@ public class Simulacion extends javax.swing.JFrame {
     }//GEN-LAST:event_politicaPlanificacionActionPerformed
 
     private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
-        FuncionesInterfaz.openGuardar();
-        this.setVisible(false);
+
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Guardar Procesos");
+    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+    int userSelection = fileChooser.showSaveDialog(this);
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+        String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+        if (!filePath.endsWith(".txt")) {
+            filePath += ".txt"; // Asegurar que el archivo tenga la extensión .txt
+        }
+        scheduler.guardarProcesosEnTXT(filePath);
+        JOptionPane.showMessageDialog(this, "Procesos guardados correctamente en:\n" + filePath);
+    }
+
+
     }//GEN-LAST:event_guardarActionPerformed
 
     private void estadisticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadisticasActionPerformed
@@ -780,9 +793,11 @@ public class Simulacion extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Simulacion().setVisible(true);
-            }
-        });
+            int defaultCPUs = 2; // Número de CPUs por defecto si no se especifica
+            new Simulacion(defaultCPUs).setVisible(true);
+    }
+});
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -805,8 +820,6 @@ public class Simulacion extends javax.swing.JFrame {
     private javax.swing.JLabel cpu3mar;
     private javax.swing.JLabel cpu3nombre;
     private javax.swing.JLabel cpu3pc;
-    private javax.swing.JLabel cpulabel;
-    private javax.swing.JComboBox<String> cpus;
     private javax.swing.JButton crear;
     private javax.swing.JSpinner duracionExcepcion;
     private javax.swing.JButton estadisticas;
