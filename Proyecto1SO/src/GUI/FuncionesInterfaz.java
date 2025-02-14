@@ -14,7 +14,8 @@ public class FuncionesInterfaz {
     private static final Estadisticas estadisticas= new Estadisticas();
     private static final Graficos graficos= new Graficos();
     private static final Guardar guardar= new Guardar();
-    private static final Simulacion simulacion = new Simulacion();
+    private static Simulacion simulacion;
+
 
     public static Bienvenida getBienvenida() {
         return bienvenida;
@@ -59,9 +60,11 @@ public class FuncionesInterfaz {
     public static Simulacion getSimulacion() {
         return simulacion;
     }
-    public static void openSimulacion() {
-        getSimulacion().setVisible(true);
-    }
+    public static void openSimulacion(int numCPUs) {
+    Simulacion simulacion = new Simulacion(numCPUs);
+    simulacion.setVisible(true);
+}
+
     
     public static void VolverMenu(){
        //Muestro el menu principal
