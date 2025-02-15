@@ -54,6 +54,10 @@ public class Simulacion extends javax.swing.JFrame {
         cpu2.start();
         clock.startClock(); // Inicia el reloj una vez que la interfaz está lista
         actualizarColaListos();
+        
+        osCPU1.setVisible(false);
+        osCPU2.setVisible(false);
+        osCPU3.setVisible(false);
 
         // Hilo para actualizar el ciclo de reloj en la interfaz
         new Thread(() -> {
@@ -165,8 +169,38 @@ public class Simulacion extends javax.swing.JFrame {
         cpu3mar.setText("-");
     }
 }
-
+        
+     // Cuando se esta ejecutando el SO
     
+    public void soCPU1() {
+        jpanelcpu1.setVisible(false);
+        osCPU1.setVisible(true);
+    }
+    
+    public void soCPU2() {
+        jpanelcpu2.setVisible(false);
+        osCPU2.setVisible(true);
+    }
+        
+    public void soCPU3() {
+        if (cpu3 != null) {
+            jpanelcpu3.setVisible(false);
+            osCPU3.setVisible(true);
+    }
+}
+    
+    public void hideSO1() {
+        osCPU1.setVisible(false);
+    }
+    
+    public void hideSO2() {
+        osCPU2.setVisible(false);
+    }
+
+    public void hideSO3() {
+        osCPU3.setVisible(false);
+    }
+        
     // cuando se termina un proceso, en la interfaz de esa CPU se debe mostrar como que ningun proceso se esta ejecutando en ese momento
     
 //    private void configureCPUPanel(JPanel panel, String title) {
@@ -205,9 +239,9 @@ public class Simulacion extends javax.swing.JFrame {
      * Método para actualizar la interfaz de los CPUs
      */
     private void updateCPUsDisplay() {
-    jpanelcpu1.setVisible(true);
-    jpanelcpu2.setVisible(true);
-    jpanelcpu3.setVisible(cpu3 != null); // Ocultar si cpu3 no existe
+        jpanelcpu1.setVisible(true);
+        jpanelcpu2.setVisible(true);
+        jpanelcpu3.setVisible(cpu3 != null); // Ocultar si cpu3 no existe
 }
 
     
@@ -415,8 +449,11 @@ public void actualizarColaTerminados() {
         cpu3estado = new javax.swing.JLabel();
         cpu3pc = new javax.swing.JLabel();
         osCPU1 = new javax.swing.JPanel();
+        os1 = new javax.swing.JLabel();
         osCPU2 = new javax.swing.JPanel();
+        os2 = new javax.swing.JLabel();
         osCPU3 = new javax.swing.JPanel();
+        os3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -689,14 +726,29 @@ public void actualizarColaTerminados() {
 
         osCPU1.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 1"));
         osCPU1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        os1.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        os1.setText("Ejecutando Sistema Operativo");
+        osCPU1.add(os1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+
         jPanel1.add(osCPU1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 100, 250, 80));
 
         osCPU2.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 2"));
         osCPU2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        os2.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        os2.setText("Ejecutando Sistema Operativo");
+        osCPU2.add(os2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+
         jPanel1.add(osCPU2, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 100, 250, 80));
 
         osCPU3.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 3"));
         osCPU3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        os3.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        os3.setText("Ejecutando Sistema Operativo");
+        osCPU3.add(os3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+
         jPanel1.add(osCPU3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 100, 250, 80));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -881,6 +933,9 @@ public void actualizarColaTerminados() {
     private javax.swing.JPanel jpanelcpu2;
     private javax.swing.JPanel jpanelcpu3;
     private javax.swing.JTextField nombreProceso;
+    private javax.swing.JLabel os1;
+    private javax.swing.JLabel os2;
+    private javax.swing.JLabel os3;
     private javax.swing.JPanel osCPU1;
     private javax.swing.JPanel osCPU2;
     private javax.swing.JPanel osCPU3;

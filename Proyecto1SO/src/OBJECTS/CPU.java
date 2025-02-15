@@ -1,6 +1,7 @@
 package OBJECTS;
 
 import GUI.Simulacion;
+import static OBJECTS.Process.Priority.ALTA;
 import static OBJECTS.Process.ProcessState.RUNNING;
 import java.util.concurrent.Semaphore;
 
@@ -46,6 +47,43 @@ public class CPU extends Thread {
         currentProcess = null;
     }
     
+    private void runOS(int cycles) {
+        Process sistemaOp = new Process(0, "Sistema Operativo", 5, true, 0, 0, ALTA, 0);
+
+        System.out.println("[DEBUG] CPU " + cpuId + " ejecutando Sistema Operativo por " + cycles + " ciclos.");
+
+        if (cpuId == 1) {
+            gui.soCPU1();
+        } else if (cpuId == 2) {
+            gui.soCPU2();
+        } else {
+            gui.soCPU3();
+        }
+        
+        
+        for (int i = 0; i < cycles; i++) {
+            synchronized (clock) {
+                try {
+                    clock.wait(); // Espera un ciclo de reloj antes de continuar
+                } catch (InterruptedException e) {
+                    System.out.println("[ERROR] CPU " + cpuId + " interrumpida durante la ejecución del SO");
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+        }
+
+        System.out.println("[DEBUG] CPU " + cpuId + " terminó la ejecución del Sistema Operativo.");
+        
+        if (cpuId == 1) {
+            gui.hideSO1();
+        } else if (cpuId == 2) {
+            gui.hideSO2();
+        } else {
+            gui.hideSO3();
+        }
+    }
+    
 @Override
 public void run() {
     while (running) {
@@ -53,6 +91,8 @@ public void run() {
             cpuSemaphore.acquire();
             try {
                 if (currentProcess == null && !scheduler.getReadyQueue().isEmpty()) {
+                    runOS(5); // Ejecutar SO por 5 ciclos antes de asignar un proceso nuevo
+                    
                     Process process = scheduler.getNextProcess(currentProcess, clock.getCurrentCycle());
                     if (process != null && !process.isExecuting()) {
                         process.setExecuting(true);
@@ -84,10 +124,10 @@ public void run() {
 
         while (!currentProcess.isCompleted()) {
             synchronized (clock) { 
-                clock.wait(); // 🔹 Esperar exactamente un tick antes de ejecutar la instrucción
+                clock.wait(); // Esperar exactamente un tick antes de ejecutar la instruccion
             }
 
-            currentProcess.executeInstruction(); // 🔹 Ejecutar una instrucción por tick
+            currentProcess.executeInstruction(); // Ejecutar una instruccion por tick
 
             System.out.println("[DEBUG] CPU " + cpuId + " ejecutando " + currentProcess.getName() + 
                 " | PC: " + currentProcess.getProgramCounter() + 
