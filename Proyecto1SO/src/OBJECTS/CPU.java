@@ -90,6 +90,7 @@ public void run() {
         try {
             cpuSemaphore.acquire();
             try {
+
                 if (currentProcess == null && !scheduler.getReadyQueue().isEmpty()) {
                     runOS(5); // Ejecutar SO por 5 ciclos antes de asignar un proceso nuevo
                     
@@ -104,6 +105,7 @@ public void run() {
                 } else if (currentProcess != null) {
                     runProcess(); // Solo ejecutar si hay un proceso asignado
                 }
+                
             } finally {
                 cpuSemaphore.release();
             }

@@ -4,19 +4,64 @@
  */
 package GUI;
 
+import javax.swing.*;
+import java.awt.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.time.Second;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+
 /**
  *
  * @author cristiandresgp
  */
 public class Estadisticas extends javax.swing.JFrame {
-
-    /**
-     * Creates new form Estadisticas
-     */
+    private TimeSeries cpuUsageSeries;
+    private DefaultCategoryDataset processDataset;
+    
     public Estadisticas() {
         initComponents();
+        setupCharts();
+    }
+    
+    private void setupCharts() {
+        cpuUsageSeries = new TimeSeries("Uso de CPU (%)");
+        processDataset = new DefaultCategoryDataset();
+
+        JPanel panel = new JPanel(new GridLayout(1, 2));
+        panel.add(createCpuUsageChart());
+        panel.add(createProcessChart());
+
+        getContentPane().add(panel, BorderLayout.CENTER);
+    }
+    
+    private ChartPanel createCpuUsageChart() {
+        TimeSeriesCollection dataset = new TimeSeriesCollection(cpuUsageSeries);
+        JFreeChart chart = ChartFactory.createTimeSeriesChart(
+            "Uso de CPU en Tiempo Real", "Tiempo", "Uso (%)", dataset, true, true, false
+        );
+        return new ChartPanel(chart);
+    }
+    
+    private ChartPanel createProcessChart() {
+        JFreeChart chart = ChartFactory.createBarChart(
+            "Procesos Ejecutados por CPU", "CPU", "Cantidad", processDataset
+        );
+        return new ChartPanel(chart);
     }
 
+    public void actualizarUsoCPU(int cpuId, double uso) {
+        cpuUsageSeries.addOrUpdate(new Second(), uso);
+    }
+  
+    
+    public void actualizarProcesosEjecutados(int cpuId, int cantidad) {
+        processDataset.setValue(cantidad, "CPU " + cpuId, "CPU " + cpuId);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,8 +79,9 @@ public class Estadisticas extends javax.swing.JFrame {
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel1.setText("ESTADÍSTICAS");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, -1, -1));
 
         jButton1.setText("REGRESAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -43,17 +89,17 @@ public class Estadisticas extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 260, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 430, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
         );
 
         pack();
@@ -103,4 +149,5 @@ public class Estadisticas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
 }
