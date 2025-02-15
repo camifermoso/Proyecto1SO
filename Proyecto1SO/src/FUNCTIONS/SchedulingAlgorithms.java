@@ -17,7 +17,6 @@ import OBJECTS.Process;
  * Implementación de los algoritmos de planificación de procesos.
  */
 public class SchedulingAlgorithms {
-
     private static int cpuCount = 2; // Default CPUs, updated before simulation starts
 
     public static void setCPUCount(int count) {
