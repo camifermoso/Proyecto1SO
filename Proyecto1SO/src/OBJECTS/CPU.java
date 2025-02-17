@@ -14,8 +14,9 @@ public class CPU extends Thread {
     private final Scheduler scheduler;
     private Clock clock;
     private Simulacion gui;
+    private ExceptionHandler exceptionhandler;
     
-    public CPU(int cpuId, Scheduler scheduler, Clock clock, Simulacion gui) {
+    public CPU(int cpuId, Scheduler scheduler, Clock clock, Simulacion gui, ExceptionHandler exceptionhandler) {
         this.cpuId = cpuId;
         this.currentProcess = null; 
         this.busy = true;
@@ -24,6 +25,7 @@ public class CPU extends Thread {
         this.scheduler = scheduler;
         this.clock = clock;
         this.gui = gui;
+        this.exceptionhandler = exceptionhandler;
     }
     
     private void assignProcessInterfaceUpdate(Process process) {
@@ -87,6 +89,7 @@ public class CPU extends Thread {
 @Override
 public void run() {
     while (running) {
+        exceptionhandler.checkBlockedProcesses(clock.getCurrentCycle());
         try {
             cpuSemaphore.acquire();
             try {
@@ -124,10 +127,12 @@ public void run() {
         currentProcess.setState(RUNNING);
         assignProcessInterfaceUpdate(currentProcess);
 
-        while (!currentProcess.isCompleted()) {
+        while (!currentProcess.isCompleted() || currentProcess==null) {
             synchronized (clock) { 
                 clock.wait(); // Esperar exactamente un tick antes de ejecutar la instruccion
             }
+            
+            
 
             currentProcess.executeInstruction(); // Ejecutar una instruccion por tick
 
@@ -136,8 +141,30 @@ public void run() {
                 " | MAR: " + currentProcess.getMemoryAddressRegister());
 
             assignProcessInterfaceUpdate(currentProcess);
+            
+            if (!currentProcess.isCPUBound()){
+                currentProcess.setCounter(currentProcess.getCounter()+1);
+                
+                if(currentProcess.isBlocked()){
+                
+                System.out.println("[DEBUG] Proceso bloqueado: " + currentProcess.getName());
+                exceptionhandler.blockProcess(currentProcess);
+                gui.actualizarColaBloqueados();
+                terminateProcessInterfaceUpdate();
+                currentProcess = null;
+                
+                
+                // Liberar la CPU y asignar otro proceso
+                    currentProcess = scheduler.getNextProcess(null, clock.getCurrentCycle());
+                    if (currentProcess != null) {
+                        assignProcessInterfaceUpdate(currentProcess);
+                    }
+                    return; // Salir del método para que la CPU vuelva a ejecutarse con el nuevo proceso
+            
+            }}
+            
         }
-
+        
         System.out.println("[DEBUG] Proceso terminado: " + currentProcess.getName());
         scheduler.terminateProcess(currentProcess);
         gui.actualizarColaTerminados();

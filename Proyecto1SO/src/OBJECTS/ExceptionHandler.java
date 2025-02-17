@@ -30,6 +30,7 @@ public class ExceptionHandler {
     p.setState(Process.ProcessState.BLOCKED);
     blockedQueue.enqueue(p);
     p.setBlockedStartTime(clock.getCurrentCycle()); // Guarda el ciclo en que se bloqueó
+    p.setCounter(0);
 
 }
 

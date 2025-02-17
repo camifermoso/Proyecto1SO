@@ -141,10 +141,6 @@ public Process getNextProcess(Process currentProcess, int currentTime) {
     terminatedQueue.enqueue(process);
 }
 
-public void moveProcessToBlocked(Process process) {
-    process.setState(Process.ProcessState.BLOCKED);
-    System.out.println("Proceso " + process.getName() + " movido a bloqueados.");
-}
 
 public void guardarProcesosEnTXT(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
