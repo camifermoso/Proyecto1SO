@@ -89,36 +89,46 @@ public class CPU extends Thread {
 @Override
 public void run() {
     while (running) {
-        //exceptionhandler.checkBlockedProcesses(clock.getCurrentCycle());
         try {
             cpuSemaphore.acquire();
             try {
-
-                if (currentProcess == null && !scheduler.getReadyQueue().isEmpty()) {
-                    runOS(5); // Ejecutar SO por 5 ciclos antes de asignar un proceso nuevo
-                    
-                    Process process = scheduler.getNextProcess(currentProcess, clock.getCurrentCycle());
-                    if (process != null && !process.isExecuting()) {
-                        process.setExecuting(true);
-                        currentProcess = process;
-                        assignProcessInterfaceUpdate(process);
-                        gui.actualizarColaListos();
-                        System.out.println("[DEBUG] CPU " + cpuId + " asignó: " + process.getName());
+                if (currentProcess == null) {
+                    if (!scheduler.getReadyQueue().isEmpty()) {
+                        runOS(5); // Ejecutar SO por 5 ciclos antes de asignar un proceso nuevo
+                        Process process = scheduler.getNextProcess(null, clock.getCurrentCycle());
+                        if (process != null) {
+                            process.setExecuting(true);
+                            currentProcess = process;
+                            assignProcessInterfaceUpdate(process);
+                            gui.actualizarColaListos();
+                        }
                     }
-                } else if (currentProcess != null) {
-                    runProcess(); // Solo ejecutar si hay un proceso asignado
+                } else {
+                    runProcess(); 
+
+                    if (currentProcess == null) { 
+                        Process process = scheduler.getNextProcess(null, clock.getCurrentCycle());
+                        if (process != null) {
+                            process.setExecuting(true);
+                            currentProcess = process;
+                            assignProcessInterfaceUpdate(process);
+                            gui.actualizarColaListos();
+                        }
+                    }
                 }
-                
             } finally {
                 cpuSemaphore.release();
             }
-
         } catch (InterruptedException e) {
-            System.out.println("[ERROR] CPU " + cpuId + " fue interrumpida");
             Thread.currentThread().interrupt();
         }
     }
 }
+
+
+
+
+
 
 
     

@@ -56,38 +56,35 @@ public Process unblockProcess() {
         return !blockedQueue.isEmpty();
     }
     
-    public void checkBlockedProcesses(int currentCycle) {
-    if (blockedQueue == null || blockedQueue.isEmpty()) {
-        return; // No hay procesos bloqueados
-    }
+ public void checkBlockedProcesses(int currentCycle) {
+    if (blockedQueue.isEmpty()) return;
 
     Queue tempQueue = new Queue();
 
     while (!blockedQueue.isEmpty()) {
         Object obj = blockedQueue.dequeue();
-        if (!(obj instanceof Process)) {
-            System.out.println("[ERROR] Se encontró un objeto en blockedQueue que no es un Process.");
-            continue;
-        }
+        if (!(obj instanceof Process)) continue;
 
         Process process = (Process) obj;
         int blockedTime = currentCycle - process.getBlockedStartTime();
 
         if (blockedTime >= process.getExceptionDuration()) {
-            System.out.println("[DEBUG] Proceso " + process.getName() + " desbloqueado después de " + blockedTime + " ciclos.");
             process.setState(Process.ProcessState.READY);
-            scheduler.addProcess(process); // ✅ Ahora sí se mueve a la cola de listos
+            process.setExecuting(false);  
+            scheduler.addProcess(process);
+            gui.actualizarColaListos(); // 🔹 Actualiza la interfaz de la cola de listos
         } else {
-            tempQueue.enqueue(process); // ✅ Solo encolar si aún debe seguir bloqueado
+            tempQueue.enqueue(process);
         }
     }
 
-    blockedQueue = tempQueue; // ✅ Solo quedan los procesos que siguen bloqueados
-
-    // ✅ Actualizar la interfaz para reflejar cambios
-    gui.actualizarColaListos();
-    gui.actualizarColaBloqueados();
+    blockedQueue = tempQueue;
+    gui.actualizarColaBloqueados(); // 🔹 Asegura que la interfaz muestre correctamente la cola de bloqueados
 }
+
+
+
+
 
 
 

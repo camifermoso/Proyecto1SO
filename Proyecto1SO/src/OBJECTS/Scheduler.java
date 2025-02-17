@@ -71,7 +71,10 @@ public class Scheduler {
 public Process getNextProcess(Process currentProcess, int currentTime) {
     try {
         schedulerSemaphore.acquire(); // 🔒 Bloqueo del semáforo para acceso seguro
-        if (readyQueue.isEmpty()) return null;
+        if (readyQueue.isEmpty()) {
+            System.out.println("[INFO] No hay procesos en la cola de listos.");
+            return null;
+        }
 
         Process nextProcess = null;
         switch (algorithm) {
@@ -92,8 +95,10 @@ public Process getNextProcess(Process currentProcess, int currentTime) {
                 break;
         }
 
-        if (nextProcess != null && nextProcess.isExecuting()) {
-            return null; // No devolver un proceso ya en ejecución
+        if (nextProcess != null) {
+            System.out.println("[DEBUG] Se seleccionó el proceso: " + nextProcess.getName() + " de la cola de listos.");
+        } else {
+            System.out.println("[INFO] No se pudo seleccionar un proceso de la cola de listos.");
         }
 
         return nextProcess;
@@ -104,6 +109,8 @@ public Process getNextProcess(Process currentProcess, int currentTime) {
         schedulerSemaphore.release(); // 🔓 Liberación del semáforo
     }
 }
+
+
 
 
 

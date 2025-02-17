@@ -472,7 +472,7 @@ public void actualizarColaTerminados() {
         exitqueue.setFocusable(false);
         jScrollPane1.setViewportView(exitqueue);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 470, 590, 170));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, 620, 170));
 
         jLabel3.setText("POLÍTICA DE PLANIFICACION ACTUAL: ");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 30, -1, 20));
@@ -483,7 +483,7 @@ public void actualizarColaTerminados() {
         readyqueue.setFocusable(false);
         jScrollPane2.setViewportView(readyqueue);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 590, 170));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 620, 170));
 
         jLabel4.setText("COLA DE LISTOS");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, -1, -1));
@@ -512,7 +512,7 @@ public void actualizarColaTerminados() {
         blockedqueue1.setFocusable(false);
         jScrollPane3.setViewportView(blockedqueue1);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, 590, 170));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 620, 170));
 
         jpanelcpu1.setBorder(javax.swing.BorderFactory.createTitledBorder("CPU 1"));
         jpanelcpu1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
