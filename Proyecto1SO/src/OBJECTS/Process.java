@@ -26,6 +26,8 @@ public class Process {
     private int memoryAddressRegister;
     private int baseMemoryAddress;  // Dirección base en memoria del proceso
     private int blockedStartTime; // Ciclo en el que el proceso fue bloqueado
+    private int counter; // Cuantos número de ciclos ejecutados desde el último bloqueo.
+
 
 
 
@@ -92,6 +94,11 @@ public class Process {
     public boolean isCompleted() {
         return executedInstructions >= totalInstructions;
     }
+    
+    public boolean isBlocked() {
+    return counter == exceptionCycle;  
+}
+
 
     public int getProcessID() {
         return processID;
@@ -164,6 +171,14 @@ public class Process {
 public void setBlockedStartTime(int blockedStartTime) {
     this.blockedStartTime = blockedStartTime;
 }
+
+ public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
 
     public Object getTipo(){
     if (isCPUBound()) {

@@ -39,11 +39,11 @@ public class Simulacion extends javax.swing.JFrame {
         customInit();  // Inicializa los elementos visuales
 //        createCPUDisplays(); // Crea los paneles para los CPUs
         // Crear CPUs según la cantidad seleccionada
-        cpu1 = new CPU(1, scheduler, clock, this);
-        cpu2 = new CPU(2, scheduler, clock, this);
+        cpu1 = new CPU(1, scheduler, clock, this, exceptionHandler);
+        cpu2 = new CPU(2, scheduler, clock, this, exceptionHandler);
     
         if (numCPUs == 3) {
-        cpu3 = new CPU(3, scheduler, clock, this);
+        cpu3 = new CPU(3, scheduler, clock, this, exceptionHandler);
         cpu3.start();
     } else {
         cpu3 = null; // No instanciar si se seleccionaron solo 2 CPUs
@@ -266,7 +266,7 @@ public class Simulacion extends javax.swing.JFrame {
     
     // Validar que si es I/O bound, tenga interrupciones o que sean validas
     if (tipo.equals("I/O-bound")) {
-    if (cicloExcep == 0 || duracionExcep == 0 || cicloExcep>instrucciones || duracionExcep>instrucciones) {
+    if (cicloExcep == 0 || duracionExcep == 0 || cicloExcep>=instrucciones) {
         JOptionPane.showMessageDialog(this, "Debe ingresar ciclos de interrupciones válidos.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }}
