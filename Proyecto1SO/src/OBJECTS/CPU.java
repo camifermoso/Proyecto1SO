@@ -89,7 +89,7 @@ public class CPU extends Thread {
 @Override
 public void run() {
     while (running) {
-        exceptionhandler.checkBlockedProcesses(clock.getCurrentCycle());
+        //exceptionhandler.checkBlockedProcesses(clock.getCurrentCycle());
         try {
             cpuSemaphore.acquire();
             try {

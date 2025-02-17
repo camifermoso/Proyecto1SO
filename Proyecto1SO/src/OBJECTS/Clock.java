@@ -4,6 +4,8 @@
  */
 package OBJECTS;
 
+import GUI.Simulacion;
+
 /**
  *
  * @author cristiandresgp
@@ -12,11 +14,13 @@ public class Clock { //Administra el ciclo de reloj global.
     private int currentCycle;
     private long tickDuration; // Duración del ciclo en milisegundos
     private boolean running;
+    private ExceptionHandler exceptionHandler; 
 
-    public Clock() {
+    public Clock(ExceptionHandler exceptionHandler) {
         this.currentCycle = 0;
         this.tickDuration = 1000; // Por defecto, 1 segundo
         this.running = false;
+        this.exceptionHandler = exceptionHandler;
     }
 
     public void tick() {
@@ -54,6 +58,9 @@ public class Clock { //Administra el ciclo de reloj global.
             synchronized (this) {
                 notifyAll(); // 🔹 Notificar a todas las CPUs que hay un nuevo ciclo de reloj
             }
+            
+            // ✅ Revisar procesos bloqueados después de cada ciclo de reloj
+           exceptionHandler.checkBlockedProcesses(currentCycle);
         }
     }).start();
 }
