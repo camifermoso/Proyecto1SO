@@ -32,10 +32,10 @@ public class Simulacion extends javax.swing.JFrame {
      * Constructor
      */
     public Simulacion(int numCPUs) {      
-        initComponents();
-        clock = new Clock();
+        initComponents(); 
         scheduler = new Scheduler("FCFS", 5); // Iniciar con política predeterminada
-        exceptionHandler = new ExceptionHandler();
+        exceptionHandler = new ExceptionHandler(scheduler, this);
+        clock = new Clock(exceptionHandler);
         customInit();  // Inicializa los elementos visuales
 //        createCPUDisplays(); // Crea los paneles para los CPUs
         // Crear CPUs según la cantidad seleccionada
@@ -326,11 +326,11 @@ public class Simulacion extends javax.swing.JFrame {
     readyqueue.setText(scheduler.getReadyQueue().getAllProcesses());
 }
     public void actualizarColaBloqueados() {
-    blockedqueue1.setText(exceptionHandler.hasBlockedProcesses() ? exceptionHandler.getBlockedQueue().getBlockedProcesses() : "No hay procesos bloqueados");
+    blockedqueue1.setText(exceptionHandler.hasBlockedProcesses() ? exceptionHandler.getBlockedQueue().getBlockedProcesses() : "");
 }
 
 public void actualizarColaTerminados() {
-    exitqueue.setText(!scheduler.getTerminatedQueue().isEmpty() ? scheduler.getTerminatedQueue().getTerminatedProcesses() : "No hay procesos terminados");
+    exitqueue.setText(!scheduler.getTerminatedQueue().isEmpty() ? scheduler.getTerminatedQueue().getTerminatedProcesses() : "");
 }
 
     // metodo para manejar la habilitación/deshabilitación de los JSpinner
