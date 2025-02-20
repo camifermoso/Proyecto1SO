@@ -147,47 +147,59 @@ public void run() {
 }
 
 
-
-
-
-
-
-    
-    private void runProcess() {
+private void runProcess() {
     try {
-        currentProcess.setState(RUNNING);
+        if (currentProcess == null) {
+            System.out.println("[ERROR] CPU " + cpuId + " recibió un proceso nulo.");
+            return;
+        }
+
+        currentProcess.setState(Process.ProcessState.RUNNING); // ⬅️ Asegurar que el proceso está en RUNNING
         assignProcessInterfaceUpdate(currentProcess);
 
-        while (!currentProcess.isCompleted() || currentProcess==null) {
+        String currentPolicy = scheduler.getAlgorithm();
+        int quantum = scheduler.getQuantum();
+
+        while (!currentProcess.isCompleted()) {
             synchronized (clock) { 
-                clock.wait(); // Esperar exactamente un tick antes de ejecutar la instruccion
+                clock.wait(); // ⏳ Esperar un ciclo antes de ejecutar la instrucción
             }
-            
-            
 
-            currentProcess.executeInstruction(); // Ejecutar una instruccion por tick
-
-            System.out.println("[DEBUG] CPU " + cpuId + " ejecutando " + currentProcess.getName() + 
-                " | PC: " + currentProcess.getProgramCounter() + 
-                " | MAR: " + currentProcess.getMemoryAddressRegister());
-
+            currentProcess.executeInstruction();
             assignProcessInterfaceUpdate(currentProcess);
-            
-            if (!currentProcess.isCPUBound()){
-                currentProcess.setCounter(currentProcess.getCounter()+1);
-                
-                if(currentProcess.isBlocked()){
-                
-                System.out.println("[DEBUG] Proceso bloqueado: " + currentProcess.getName());
-                exceptionhandler.blockProcess(currentProcess);
-                gui.actualizarColaBloqueados();
-                terminateProcessInterfaceUpdate();
-                currentProcess = null;
-                
-                
-                // Liberar la CPU y asignar otro proceso
+
+            // 🔄 Verificar preemptión en SRT
+            if (currentPolicy.equals("SRT")) {
+                Process nextProcess = scheduler.getNextProcess(currentProcess, clock.getCurrentCycle());
+
+                if (nextProcess != null && nextProcess != currentProcess) {
+                    System.out.println("[DEBUG] Preemptión en SRT: " + currentProcess.getName() + " -> " + nextProcess.getName());
+
+                    // ⬅️ 🔄 Actualizar estado del proceso interrumpido a READY
+                    currentProcess.setState(Process.ProcessState.READY);
+                    scheduler.addProcess(currentProcess); // Reinsertar en cola de listos
+
+                    // ⬅️ 🔄 Asignar el nuevo proceso a la CPU y cambiar su estado a RUNNING
+                    currentProcess = nextProcess;
+                    currentProcess.setState(Process.ProcessState.RUNNING);
+                    assignProcessInterfaceUpdate(currentProcess);
+                }
+            }
+
+            if (!currentProcess.isCPUBound()) {
+                currentProcess.setCounter(currentProcess.getCounter() + 1);
+
+                if (currentProcess.isBlocked()) {
+                    System.out.println("[DEBUG] Proceso bloqueado: " + currentProcess.getName());
+                    exceptionhandler.blockProcess(currentProcess);
+                    gui.actualizarColaBloqueados();
+                    terminateProcessInterfaceUpdate();
+                    currentProcess = null;
+
+                    // Liberar la CPU y asignar otro proceso
                     currentProcess = scheduler.getNextProcess(null, clock.getCurrentCycle());
                     if (currentProcess != null) {
+                        currentProcess.setState(Process.ProcessState.RUNNING);
                         assignProcessInterfaceUpdate(currentProcess);
                     }
                     return; // Salir del método para que la CPU vuelva a ejecutarse con el nuevo proceso
@@ -242,7 +254,7 @@ public void run() {
             stats.updateStatisticsGUI();
             
         }
-        
+
         System.out.println("[DEBUG] Proceso terminado: " + currentProcess.getName());
         scheduler.terminateProcess(currentProcess);
         
@@ -257,9 +269,6 @@ public void run() {
 }
 
 
-
-
-    
     public void stopCPU() {
         running = false;
         interrupt();
