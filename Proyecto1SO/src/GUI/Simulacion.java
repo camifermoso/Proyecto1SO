@@ -27,6 +27,7 @@ public class Simulacion extends javax.swing.JFrame {
     private boolean running = true; // Control del hilo de actualización
     public CPU cpu1, cpu2, cpu3;
     private boolean cpu3Active = true;
+    public Estadisticas stats;
 
     /**
      * Constructor
@@ -36,14 +37,15 @@ public class Simulacion extends javax.swing.JFrame {
         scheduler = new Scheduler("FCFS", 5); // Iniciar con política predeterminada
         exceptionHandler = new ExceptionHandler(scheduler, this);
         clock = new Clock(exceptionHandler);
+        stats = new Estadisticas();
         customInit();  // Inicializa los elementos visuales
 //        createCPUDisplays(); // Crea los paneles para los CPUs
         // Crear CPUs según la cantidad seleccionada
-        cpu1 = new CPU(1, scheduler, clock, this, exceptionHandler);
-        cpu2 = new CPU(2, scheduler, clock, this, exceptionHandler);
+        cpu1 = new CPU(1, scheduler, clock, this, stats, exceptionHandler);
+        cpu2 = new CPU(2, scheduler, clock, this, stats, exceptionHandler);
     
         if (numCPUs == 3) {
-        cpu3 = new CPU(3, scheduler, clock, this, exceptionHandler);
+        cpu3 = new CPU(3, scheduler, clock, this, stats, exceptionHandler);
         cpu3.start();
     } else {
         cpu3 = null; // No instanciar si se seleccionaron solo 2 CPUs

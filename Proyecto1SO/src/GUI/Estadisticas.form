@@ -484,7 +484,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel40">
+            <Component class="javax.swing.JLabel" name="ioboundSJF">
               <Properties>
                 <Property name="text" type="java.lang.String" value="ioboundSJF"/>
               </Properties>
