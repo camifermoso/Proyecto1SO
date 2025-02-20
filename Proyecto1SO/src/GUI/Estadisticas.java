@@ -75,46 +75,46 @@ public class Estadisticas extends javax.swing.JFrame {
     
     public void updateStatisticsGUI(){
         // General
-//        procesosTerminados.setText(Integer.toString());
-//        procesosIOBound.setText(Integer.toString());
-//        procesosCPUBound.setText(Integer.toString());
-//        ciclo.setText(Integer.toString());
-//        throughput.setText(Double.toString());
+        procesosTerminados.setText(Integer.toString(procesostotales));
+        procesosIOBound.setText(Integer.toString(procesoscpubound));
+        procesosCPUBound.setText(Integer.toString(procesosiobound));
+        ciclos.setText(Integer.toString(ciclosgeneral));
+        throughput.setText(Double.toString(throughputgeneral));
 
         // SRT
-//        ciclosSRT.setText(Integer.toString());
-//        procesosSRT.setText(Integer.toString());
-//        cpuboundSRT.setText(Integer.toString());
-//        ioboundSRT.setText(Integer.toString());
-//        throughputSRT.setText(Double.toString());
-
+        ciclosSRT.setText(Integer.toString(ciclossrt));
+        procesosSRT.setText(Integer.toString(procesossrt));
+        cpuboundSRT.setText(Integer.toString(cpuboundsrt));
+        ioboundSRT.setText(Integer.toString(ioboundsrt));
+        throughputSRT.setText(Double.toString(throughputsrt));
+        
         //SJF
-//        ciclosSJF.setText(Integer.toString());
-//        procesosSJF.setText(Integer.toString());
-//        cpuboundSJF.setText(Integer.toString());
-//        ioboundSJF.setText(Integer.toString());
-//        throughputSJF.setText(Double.toString());
+        ciclosSJF.setText(Integer.toString(ciclossjf));
+        procesosSJF.setText(Integer.toString(procesossjf));
+        cpuboundSJF.setText(Integer.toString(cpuboundsjf));
+        ioboundSJF.setText(Integer.toString(ioboundsjf));
+        throughputSJF.setText(Double.toString(throughputsjf));
 
         //FCFS
-//        ciclosFCFS.setText(Integer.toString());
-//        procesosFCFS.setText(Integer.toString());
-//        cpuboundFCFS.setText(Integer.toString());
-//        ioboundFCFS.setText(Integer.toString());
-//        throughputFCFS.setText(Double.toString());
+        ciclosFCFS.setText(Integer.toString(ciclosfcfs));
+        procesosFCFS.setText(Integer.toString(procesosfcfs));
+        cpuboundFCFS.setText(Integer.toString(cpuboundfcfs));
+        ioboundFCFS.setText(Integer.toString(ioboundfcfs));
+        throughputFCFS.setText(Double.toString(throughputfcfs));
 
         //HRRN
-//        ciclosHRRN.setText(Integer.toString());
-//        procesosHRRN.setText(Integer.toString());
-//        cpuboundHRRN.setText(Integer.toString());
-//        ioboundHRRN.setText(Integer.toString());
-//        throughputHRRN.setText(Double.toString());
+        ciclosHRRN.setText(Integer.toString(cicloshrrn));
+        procesosHRRN.setText(Integer.toString(procesoshrrn));
+        cpuboundHRRN.setText(Integer.toString(cpuboundhrrn));
+        ioboundHRRN.setText(Integer.toString(ioboundhrrn));
+        throughputHRRN.setText(Double.toString(throughputhrrn));
 
         //Round Robin
-//        ciclosRR.setText(Integer.toString());
-//        procesosRR.setText(Integer.toString());
-//        cpuboundRR.setText(Integer.toString());
-//        ioboundRR.setText(Integer.toString());
-//        throughputRR.setText(Double.toString());
+        ciclosRR.setText(Integer.toString(ciclosrr));
+        procesosRR.setText(Integer.toString(procesosrr));
+        cpuboundRR.setText(Integer.toString(cpuboundrr));
+        ioboundRR.setText(Integer.toString(ioboundrr));
+        throughputRR.setText(Double.toString(throughputrr));
 
     }
 
@@ -165,7 +165,7 @@ public class Estadisticas extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         cpuboundSJF = new javax.swing.JLabel();
-        jLabel40 = new javax.swing.JLabel();
+        ioboundSJF = new javax.swing.JLabel();
         throughputSJF = new javax.swing.JLabel();
         RoundRobin = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
@@ -345,8 +345,8 @@ public class Estadisticas extends javax.swing.JFrame {
         cpuboundSJF.setText("cpuboundSJF");
         SJF.add(cpuboundSJF, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, -1, -1));
 
-        jLabel40.setText("ioboundSJF");
-        SJF.add(jLabel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, -1, -1));
+        ioboundSJF.setText("ioboundSJF");
+        SJF.add(ioboundSJF, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, -1, -1));
 
         throughputSJF.setText("throughputSJF");
         SJF.add(throughputSJF, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, -1, -1));
@@ -565,6 +565,7 @@ public class Estadisticas extends javax.swing.JFrame {
     private javax.swing.JLabel ioboundFCFS;
     private javax.swing.JLabel ioboundHRRN;
     private javax.swing.JLabel ioboundRR;
+    private javax.swing.JLabel ioboundSJF;
     private javax.swing.JLabel ioboundSRT;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -600,7 +601,6 @@ public class Estadisticas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;

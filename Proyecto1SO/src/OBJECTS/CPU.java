@@ -1,6 +1,25 @@
 package OBJECTS;
 
+import static GUI.Estadisticas.procesoscpubound;
+import static GUI.Estadisticas.procesosiobound;
+import static GUI.Estadisticas.procesostotales;
 import GUI.Simulacion;
+import GUI.Estadisticas;
+import static GUI.Estadisticas.cpuboundfcfs;
+import static GUI.Estadisticas.cpuboundhrrn;
+import static GUI.Estadisticas.cpuboundrr;
+import static GUI.Estadisticas.cpuboundsjf;
+import static GUI.Estadisticas.cpuboundsrt;
+import static GUI.Estadisticas.ioboundfcfs;
+import static GUI.Estadisticas.ioboundhrrn;
+import static GUI.Estadisticas.ioboundrr;
+import static GUI.Estadisticas.ioboundsjf;
+import static GUI.Estadisticas.ioboundsrt;
+import static GUI.Estadisticas.procesosfcfs;
+import static GUI.Estadisticas.procesoshrrn;
+import static GUI.Estadisticas.procesosrr;
+import static GUI.Estadisticas.procesossjf;
+import static GUI.Estadisticas.procesossrt;
 import static OBJECTS.Process.Priority.ALTA;
 import static OBJECTS.Process.ProcessState.RUNNING;
 import java.util.concurrent.Semaphore;
@@ -15,8 +34,9 @@ public class CPU extends Thread {
     private Clock clock;
     private Simulacion gui;
     private ExceptionHandler exceptionhandler;
+    private Estadisticas stats;
     
-    public CPU(int cpuId, Scheduler scheduler, Clock clock, Simulacion gui, ExceptionHandler exceptionhandler) {
+    public CPU(int cpuId, Scheduler scheduler, Clock clock, Simulacion gui, Estadisticas stats, ExceptionHandler exceptionhandler) {
         this.cpuId = cpuId;
         this.currentProcess = null; 
         this.busy = true;
@@ -26,6 +46,7 @@ public class CPU extends Thread {
         this.clock = clock;
         this.gui = gui;
         this.exceptionhandler = exceptionhandler;
+        this.stats = stats;
     }
     
     private void assignProcessInterfaceUpdate(Process process) {
@@ -181,13 +202,62 @@ private void runProcess() {
                         currentProcess.setState(Process.ProcessState.RUNNING);
                         assignProcessInterfaceUpdate(currentProcess);
                     }
-                    return;
+                    return; // Salir del método para que la CPU vuelva a ejecutarse con el nuevo proceso
+            
+            }}
+            
+            // ESTADISTICASSSSSSSS
+            procesostotales = procesostotales+1;
+          
+            if (currentProcess.isCPUBound()) {
+                // PROCESOS CPU BOUND Y POR POLITICA
+                procesoscpubound++;
+                // Por politica de planificacion
+                if ("FCFS".equals(scheduler.getAlgorithm())) {
+                 cpuboundfcfs++;
+                 procesosfcfs++;
+                } else if ("RoundRobin".equals(scheduler.getAlgorithm())) {
+                    cpuboundrr++;
+                    procesosrr++;
+                } else if ( "SJF".equals(scheduler.getAlgorithm())) {
+                    cpuboundsjf++;
+                    procesossjf++;
+                } else if ("SRT".equals(scheduler.getAlgorithm())) {
+                    cpuboundsrt++;
+                    procesossrt++;
+                } else if ("HRRN".equals(scheduler.getAlgorithm())) {
+                    cpuboundhrrn++;
+                    procesoshrrn++;
+                }
+                
+                 } else {
+                // PROCESOS IO BOUND
+                procesosiobound = procesosiobound+1;
+                 // Por politica de planificacion
+                if ("FCFS".equals(scheduler.getAlgorithm())) {
+                 ioboundfcfs++;
+                 procesosfcfs++;
+                } else if ("RoundRobin".equals(scheduler.getAlgorithm())) {
+                    ioboundrr++;
+                    procesosrr++;
+                } else if ( "SJF".equals(scheduler.getAlgorithm())) {
+                    ioboundsjf++;
+                    procesossjf++;
+                } else if ("SRT".equals(scheduler.getAlgorithm())) {
+                    ioboundsrt++;
+                    procesossrt++;
+                } else if ("HRRN".equals(scheduler.getAlgorithm())) {
+                    ioboundhrrn++;
+                    procesoshrrn++;
                 }
             }
+            stats.updateStatisticsGUI();
+            
         }
 
         System.out.println("[DEBUG] Proceso terminado: " + currentProcess.getName());
         scheduler.terminateProcess(currentProcess);
+        
         gui.actualizarColaTerminados();
         terminateProcessInterfaceUpdate();
         currentProcess = null;
