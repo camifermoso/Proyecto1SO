@@ -169,6 +169,7 @@ public class Queue {
                       .append(", Nombre: ").append(p.getName())
                       .append(", Tipo: ").append(p.isCPUBound() ? "CPU-Bound" : "I/O-Bound")
                       .append(", Estado: ").append(p.getState())
+                      .append(", Total de instrucciones ejecutadas: ").append(p.getTotalInstructions())
                       .append(", Progreso: 100%\n"); // Siempre 100% porque está en Terminados
             }
             temp = temp.getNext();
