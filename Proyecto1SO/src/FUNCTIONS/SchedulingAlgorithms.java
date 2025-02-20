@@ -45,28 +45,54 @@ public class SchedulingAlgorithms {
     }
 
     // Shortest Process Next (SPN)
-    public static Process SPN(Queue readyQueue) {
-        LinkedList tempList = new LinkedList();
-        while (!readyQueue.isEmpty()) {
-            tempList.addLast(readyQueue.dequeue());
-        }
-        
-        Process shortest = null;
-        Nodo current = tempList.getHead();
-        while (current != null) {
-            Process p = (Process) current.getElement();
-            if (shortest == null || p.getTotalInstructions() < shortest.getTotalInstructions()) {
-                shortest = p;
-            }
-            current = current.getNext();
-        }
-        
-        tempList.removeFirst();
-        while (!tempList.isEmpty()) {
-            readyQueue.enqueue(tempList.removeFirst());
-        }
-        return shortest;
+    // Shortest Process Next (SPN) corregido
+public static Process SPN(Queue readyQueue) {
+    if (readyQueue.isEmpty()) return null;
+
+    LinkedList tempList = new LinkedList();
+    Process shortest = null;
+    Nodo shortestNode = null;
+    Nodo prev = null;
+    Nodo prevShortest = null;
+
+    // Mover los procesos de la cola a una lista temporal
+    while (!readyQueue.isEmpty()) {
+        Nodo newNode = new Nodo(readyQueue.dequeue());
+        tempList.addLast(newNode.getElement());
     }
+
+    // Buscar el proceso con menor número de instrucciones
+    Nodo current = tempList.getHead();
+    while (current != null) {
+        Process p = (Process) current.getElement();
+        if (shortest == null || p.getTotalInstructions() < shortest.getTotalInstructions()) {
+            shortest = p;
+            prevShortest = prev;
+            shortestNode = current;
+        }
+        prev = current;
+        current = current.getNext();
+    }
+
+    // Eliminar el nodo más corto de la lista temporal
+    if (shortestNode != null) {
+        if (prevShortest == null) {
+            tempList.setHead(shortestNode.getNext()); // Si era el primero
+        } else {
+            prevShortest.setNext(shortestNode.getNext()); // Saltar el nodo más corto
+        }
+    }
+
+    // Regresar los procesos restantes a la cola de listos
+    current = tempList.getHead();
+    while (current != null) {
+        readyQueue.enqueue(current.getElement());
+        current = current.getNext();
+    }
+
+    return shortest;
+}
+
 
     // Shortest Remaining Time (SRT)
     public static Process SRT(Queue readyQueue, Process currentProcess) {
