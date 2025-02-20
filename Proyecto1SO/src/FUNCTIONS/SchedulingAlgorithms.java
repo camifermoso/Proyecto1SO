@@ -94,29 +94,51 @@ public static Process SPN(Queue readyQueue) {
 }
 
 
-    // Shortest Remaining Time (SRT)
     public static Process SRT(Queue readyQueue, Process currentProcess) {
-        LinkedList tempList = new LinkedList();
-        while (!readyQueue.isEmpty()) {
-            tempList.addLast(readyQueue.dequeue());
+    if (readyQueue.isEmpty()) return currentProcess; // Si la cola está vacía, mantiene el proceso actual
+
+    Process shortestRemaining = null;
+    Nodo shortestNode = null;
+    Nodo prev = null;
+    Nodo prevShortest = null;
+    Nodo current = readyQueue.getHead();
+    
+    // Encontrar el proceso con menor tiempo restante
+    while (current != null) {
+        Process p = (Process) current.getElement();
+        int remainingTime = p.getTotalInstructions() - p.getExecutedInstructions();
+
+        if (shortestRemaining == null || 
+            remainingTime < (shortestRemaining.getTotalInstructions() - shortestRemaining.getExecutedInstructions())) {
+            shortestRemaining = p;
+            prevShortest = prev;
+            shortestNode = current;
         }
-        
-        Process shortestRemaining = null;
-        Nodo current = tempList.getHead();
-        while (current != null) {
-            Process p = (Process) current.getElement();
-            if (shortestRemaining == null || (p.getTotalInstructions() - p.getExecutedInstructions()) < (shortestRemaining.getTotalInstructions() - shortestRemaining.getExecutedInstructions())) {
-                shortestRemaining = p;
-            }
-            current = current.getNext();
-        }
-        
-        tempList.removeFirst();
-        while (!tempList.isEmpty()) {
-            readyQueue.enqueue(tempList.removeFirst());
-        }
-        return shortestRemaining;
+
+        prev = current;
+        current = current.getNext();
     }
+
+    // Verificar si el proceso actual sigue siendo el más corto
+    if (currentProcess != null &&
+        (currentProcess.getTotalInstructions() - currentProcess.getExecutedInstructions()) <= 
+        (shortestRemaining.getTotalInstructions() - shortestRemaining.getExecutedInstructions())) {
+        return currentProcess;  // Mantiene el proceso actual si aún tiene menor tiempo restante
+    }
+
+    // Eliminar el proceso seleccionado de la cola de listos
+    if (shortestNode != null) {
+        if (prevShortest == null) {
+            readyQueue.setHead(shortestNode.getNext());
+        } else {
+            prevShortest.setNext(shortestNode.getNext());
+        }
+    }
+
+    return shortestRemaining; // Devuelve el nuevo proceso seleccionado
+}
+
+
 
     // Highest Response Ratio Next (HRRN)
     public static Process HRRN(Queue readyQueue, int currentTime) {
