@@ -167,7 +167,7 @@ public class Simulacion extends javax.swing.JFrame {
         });
         
         // Configurar el JComboBox de política de planificación
-        politicaPlanificacion.setModel(new DefaultComboBoxModel<>(new String[]{"FCFS", "SJF", "Round Robin", "SRT", "HRRN"}));
+        politicaPlanificacion.setModel(new DefaultComboBoxModel<>(new String[]{"FCFS", "SJF", "RoundRobin", "SRT", "HRRN"}));
         politicaPlanificacion.addActionListener(e -> {
             String selectedPolicy = (String) politicaPlanificacion.getSelectedItem();
             scheduler.setAlgorithm(selectedPolicy);
