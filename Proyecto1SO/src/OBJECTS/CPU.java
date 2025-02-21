@@ -156,7 +156,7 @@ private void runProcess() {
 
                     // ⬅️ 🔄 Actualizar estado del proceso interrumpido a READY
                     currentProcess.setState(Process.ProcessState.READY);
-                    scheduler.addProcess(currentProcess); // Reinsertar en cola de listos
+                    scheduler.addProcess(currentProcess, clock.getCurrentCycle()); // Reinsertar en cola de listos
 
                     // ⬅️ 🔄 Asignar el nuevo proceso a la CPU y cambiar su estado a RUNNING
                     currentProcess = nextProcess;

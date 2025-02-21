@@ -10,6 +10,7 @@ package OBJECTS;
  */
 import FUNCTIONS.SchedulingAlgorithms;
 import EDD.Queue;
+import static GUI.Simulacion.clock;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,7 +59,10 @@ public class Scheduler {
         this.quantum = quantum;
     }
 
-    public void addProcess(Process p) {
+    public void addProcess(Process p, int currentTime) {
+    if (p.getArrivalTime() == 0) {
+        p.setArrivalTime(currentTime);
+    }
         listaProcesos.enqueue(p); // Guardar en la estructura auxiliar
         readyQueue.enqueue(p);
         System.out.println("Proceso agregado: " + p.getName());

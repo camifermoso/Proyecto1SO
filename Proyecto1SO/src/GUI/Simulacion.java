@@ -307,7 +307,7 @@ public class Simulacion extends javax.swing.JFrame {
     );
 
     // Agregar el proceso a la cola de listos en Scheduler
-    scheduler.addProcess(nuevoProceso);
+    scheduler.addProcess(nuevoProceso, clock.getCurrentCycle());
 
     // Mostrar mensaje de éxito
     JOptionPane.showMessageDialog(this, "Proceso creado y agregado a la cola de listos.", "Éxito", JOptionPane.INFORMATION_MESSAGE);

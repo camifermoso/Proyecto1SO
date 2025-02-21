@@ -71,7 +71,7 @@ public Process unblockProcess() {
         if (blockedTime >= process.getExceptionDuration()) {
             process.setState(Process.ProcessState.READY);
             process.setExecuting(false);  
-            scheduler.addProcess(process);
+            scheduler.addProcess(process, clock.getCurrentCycle());
             gui.actualizarColaListos(); // 🔹 Actualiza la interfaz de la cola de listos
         } else {
             tempQueue.enqueue(process);
