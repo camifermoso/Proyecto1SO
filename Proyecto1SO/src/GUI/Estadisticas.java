@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import static GUI.Simulacion.clock;
+import static GUI.Simulacion.scheduler;
 import javax.swing.*;
 import java.awt.*;
 import org.jfree.chart.ChartFactory;
@@ -21,6 +23,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 public class Estadisticas extends javax.swing.JFrame {
     
     // Variables para estadisticas
+    private boolean running = true;
     
     // General
     public static int procesostotales = 0;
@@ -64,17 +67,45 @@ public class Estadisticas extends javax.swing.JFrame {
     public static int ioboundrr = 0;
     public static double throughputrr = 0;
     
+    public static int clockomg = 0;
+    
     public Estadisticas() {
         initComponents();
+        
+            new Thread(() -> {
+            while (running) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+                SwingUtilities.invokeLater(() -> {
+                updateStatisticsGUI();
+                   
+
+                });
+            }
+        }).start();
     }
+    
     
     public void updateStatistics(){
         
     }
 
-    
-    public void updateStatisticsGUI(){
+   
+
+
+// No estamos usando este, era de prueba
+    public void uupdateStatisticsGUI() {
+    new Thread(() -> {
+        while (true) {
+            try {
+                Thread.sleep(100); // Pausa de 100 ms
+                SwingUtilities.invokeLater(() -> {
         // General
+        System.out.println("actualizando estadisticasss");
         procesosTerminados.setText(Integer.toString(procesostotales));
         procesosIOBound.setText(Integer.toString(procesoscpubound));
         procesosCPUBound.setText(Integer.toString(procesosiobound));
@@ -116,7 +147,122 @@ public class Estadisticas extends javax.swing.JFrame {
         ioboundRR.setText(Integer.toString(ioboundrr));
         throughputRR.setText(Double.toString(throughputrr));
 
+                    
+                });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+    }).start();
+}
+    
+// Esta es la actualizacion que estamos usando
+    public void updateStatisticsGUI(){
+        // General
+        System.out.println("actualizandooo estadisticas");
+        System.out.println("Procesos totales:" + procesostotales);
+        System.out.println("Procesos CPU Bound:" + procesoscpubound);
+        System.out.println("Procesos IO Bound:" + procesosiobound);
+        
+        procesosTerminados.setText("hola");
+        procesosTerminados.setText(Integer.toString(procesostotales));
+        procesosIOBound.setText(Integer.toString(procesoscpubound));
+        procesosCPUBound.setText(Integer.toString(procesosiobound));
+        ciclos.setText(Integer.toString(clockomg));
+        throughput.setText(Double.toString(throughputgeneral));
+       
+        // SRT
+        ciclosSRT.setText(Integer.toString(ciclossrt));
+        procesosSRT.setText(Integer.toString(procesossrt));
+        cpuboundSRT.setText(Integer.toString(cpuboundsrt));
+        ioboundSRT.setText(Integer.toString(ioboundsrt));
+        throughputSRT.setText(Double.toString(throughputsrt));
+        
+        //SJF
+        ciclosSJF.setText(Integer.toString(ciclossjf));
+        procesosSJF.setText(Integer.toString(procesossjf));
+        cpuboundSJF.setText(Integer.toString(cpuboundsjf));
+        ioboundSJF.setText(Integer.toString(ioboundsjf));
+        throughputSJF.setText(Double.toString(throughputsjf));
+
+        //FCFS
+        ciclosFCFS.setText(Integer.toString(ciclosfcfs));
+        procesosFCFS.setText(Integer.toString(procesosfcfs));
+        cpuboundFCFS.setText(Integer.toString(cpuboundfcfs));
+        ioboundFCFS.setText(Integer.toString(ioboundfcfs));
+        throughputFCFS.setText(Double.toString(throughputfcfs));
+
+        //HRRN
+        ciclosHRRN.setText(Integer.toString(cicloshrrn));
+        procesosHRRN.setText(Integer.toString(procesoshrrn));
+        cpuboundHRRN.setText(Integer.toString(cpuboundhrrn));
+        ioboundHRRN.setText(Integer.toString(ioboundhrrn));
+        throughputHRRN.setText(Double.toString(throughputhrrn));
+
+        //Round Robin
+        ciclosRR.setText(Integer.toString(ciclosrr));
+        procesosRR.setText(Integer.toString(procesosrr));
+        cpuboundRR.setText(Integer.toString(cpuboundrr));
+        ioboundRR.setText(Integer.toString(ioboundrr));
+        throughputRR.setText(Double.toString(throughputrr));
+
     }
+
+// Esta es otra prueba, no lo estamos usando
+public void uuupdateStatisticsGUI() {
+    // Ensure that the UI update happens on the Event Dispatch Thread
+    SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+            // General
+            System.out.println("actualizandooo estadisticas");
+
+            // Set the texts for your labels
+            procesosTerminados.setText(Integer.toString(procesostotales));
+            procesosIOBound.setText(Integer.toString(procesoscpubound));
+            procesosCPUBound.setText(Integer.toString(procesosiobound));
+            ciclos.setText(Integer.toString(ciclosgeneral));
+            throughput.setText(Double.toString(throughputgeneral));
+
+            // SRT
+            ciclosSRT.setText(Integer.toString(ciclossrt));
+            procesosSRT.setText(Integer.toString(procesossrt));
+            cpuboundSRT.setText(Integer.toString(cpuboundsrt));
+            ioboundSRT.setText(Integer.toString(ioboundsrt));
+            throughputSRT.setText(Double.toString(throughputsrt));
+
+            // SJF
+            ciclosSJF.setText(Integer.toString(ciclossjf));
+            procesosSJF.setText(Integer.toString(procesossjf));
+            cpuboundSJF.setText(Integer.toString(cpuboundsjf));
+            ioboundSJF.setText(Integer.toString(ioboundsjf));
+            throughputSJF.setText(Double.toString(throughputsjf));
+
+            // FCFS
+            ciclosFCFS.setText(Integer.toString(ciclosfcfs));
+            procesosFCFS.setText(Integer.toString(procesosfcfs));
+            cpuboundFCFS.setText(Integer.toString(cpuboundfcfs));
+            ioboundFCFS.setText(Integer.toString(ioboundfcfs));
+            throughputFCFS.setText(Double.toString(throughputfcfs));
+
+            // HRRN
+            ciclosHRRN.setText(Integer.toString(cicloshrrn));
+            procesosHRRN.setText(Integer.toString(procesoshrrn));
+            cpuboundHRRN.setText(Integer.toString(cpuboundhrrn));
+            ioboundHRRN.setText(Integer.toString(ioboundhrrn));
+            throughputHRRN.setText(Double.toString(throughputhrrn));
+
+            // Round Robin
+            ciclosRR.setText(Integer.toString(ciclosrr));
+            procesosRR.setText(Integer.toString(procesosrr));
+            cpuboundRR.setText(Integer.toString(cpuboundrr));
+            ioboundRR.setText(Integer.toString(ioboundrr));
+            throughputRR.setText(Double.toString(throughputrr));
+        }
+    });
+}
 
    
     /**
@@ -130,7 +276,7 @@ public class Estadisticas extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        regresar = new javax.swing.JButton();
         General = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -213,13 +359,13 @@ public class Estadisticas extends javax.swing.JFrame {
         jLabel1.setText("ESTADÍSTICAS");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 10, -1, -1));
 
-        jButton1.setText("REGRESAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        regresar.setText("REGRESAR");
+        regresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                regresarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+        jPanel1.add(regresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
 
         General.setBackground(new java.awt.Color(204, 255, 255));
         General.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -243,11 +389,11 @@ public class Estadisticas extends javax.swing.JFrame {
         procesosTerminados.setText("procesosTerminados");
         General.add(procesosTerminados, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 40, -1, -1));
 
-        procesosIOBound.setText("procesosIOBound");
-        General.add(procesosIOBound, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, -1, -1));
+        procesosIOBound.setText("procesosCPUBound");
+        General.add(procesosIOBound, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, -1, -1));
 
-        procesosCPUBound.setText("procesosCPUBound");
-        General.add(procesosCPUBound, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, -1, 20));
+        procesosCPUBound.setText("procesosIOBound");
+        General.add(procesosCPUBound, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, -1, 20));
 
         jLabel14.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel14.setText("Ciclos:");
@@ -505,9 +651,9 @@ public class Estadisticas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void regresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarActionPerformed
         FuncionesInterfaz.VolverMenu();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_regresarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -567,7 +713,6 @@ public class Estadisticas extends javax.swing.JFrame {
     private javax.swing.JLabel ioboundRR;
     private javax.swing.JLabel ioboundSJF;
     private javax.swing.JLabel ioboundSRT;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -615,6 +760,7 @@ public class Estadisticas extends javax.swing.JFrame {
     private javax.swing.JLabel procesosSJF;
     private javax.swing.JLabel procesosSRT;
     private javax.swing.JLabel procesosTerminados;
+    private javax.swing.JButton regresar;
     private javax.swing.JLabel throughput;
     private javax.swing.JLabel throughputFCFS;
     private javax.swing.JLabel throughputHRRN;

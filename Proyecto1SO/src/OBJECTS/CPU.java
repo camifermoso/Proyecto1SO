@@ -70,6 +70,9 @@ public class CPU extends Thread {
         currentProcess = null;
     }
     
+    private void actualizarStats(){
+        stats.uupdateStatisticsGUI();
+    }
     private void runOS(int cycles) {
         Process sistemaOp = new Process(0, "Sistema Operativo", 5, true, 0, 0, ALTA, 0);
 
@@ -206,9 +209,15 @@ private void runProcess() {
             
             }}
             
-            // ESTADISTICASSSSSSSS
+            
+        }
+
+        System.out.println("[DEBUG] Proceso terminado: " + currentProcess.getName());
+        
+                    // ESTADISTICASSSSSSSS
             procesostotales = procesostotales+1;
-          
+            System.out.println("holaaaa" + procesostotales);
+            
             if (currentProcess.isCPUBound()) {
                 // PROCESOS CPU BOUND Y POR POLITICA
                 procesoscpubound++;
@@ -251,11 +260,7 @@ private void runProcess() {
                     procesoshrrn++;
                 }
             }
-            stats.updateStatisticsGUI();
-            
-        }
-
-        System.out.println("[DEBUG] Proceso terminado: " + currentProcess.getName());
+            // actualizar stats
         scheduler.terminateProcess(currentProcess);
         
         gui.actualizarColaTerminados();
