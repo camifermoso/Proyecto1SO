@@ -182,6 +182,9 @@ private void runProcess() {
                     currentProcess.setState(Process.ProcessState.READY);
                     scheduler.addProcess(currentProcess); // Reinsertar en cola de listos
 
+                       // ejecutar OS
+                       runOS(5);
+                       
                     // ⬅️ 🔄 Asignar el nuevo proceso a la CPU y cambiar su estado a RUNNING
                     currentProcess = nextProcess;
                     currentProcess.setState(Process.ProcessState.RUNNING);
@@ -198,7 +201,8 @@ private void runProcess() {
                     gui.actualizarColaBloqueados();
                     terminateProcessInterfaceUpdate();
                     currentProcess = null;
-
+                    
+                    runOS(5);
                     // Liberar la CPU y asignar otro proceso
                     currentProcess = scheduler.getNextProcess(null, clock.getCurrentCycle());
                     if (currentProcess != null) {
@@ -265,6 +269,7 @@ private void runProcess() {
         
         gui.actualizarColaTerminados();
         terminateProcessInterfaceUpdate();
+        runOS(5);
         currentProcess = null;
 
     } catch (InterruptedException e) {
