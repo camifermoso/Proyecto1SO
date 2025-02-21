@@ -19,6 +19,13 @@ import static GUI.Estadisticas.procesoshrrn;
 import static GUI.Estadisticas.procesosrr;
 import static GUI.Estadisticas.procesossjf;
 import static GUI.Estadisticas.procesossrt;
+import static GUI.Estadisticas.throughputfcfs;
+import static GUI.Estadisticas.throughputrr;
+import static GUI.Estadisticas.throughputsjf;
+import static GUI.Estadisticas.throughputsrt;
+import static GUI.Estadisticas.throughputhrrn;
+import static GUI.Estadisticas.throughputgeneral;
+import static GUI.Estadisticas.procesostotales;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -89,7 +96,8 @@ public class Simulacion extends javax.swing.JFrame {
                 SwingUtilities.invokeLater(() -> {
                     clockLabel.setText("CICLO DE RELOJ GLOBAL: " + clock.getCurrentCycle());
                     updateCPUsDisplay();
-                    
+                
+                // PARA ESTADISTICAS
                 // Ciclos
                 clockomg++;
                 if ("FCFS".equals(scheduler.getAlgorithm())) {
@@ -102,6 +110,32 @@ public class Simulacion extends javax.swing.JFrame {
                     ciclossrt++;
                 } else if ("HRRN".equals(scheduler.getAlgorithm())) {
                     cicloshrrn++;
+                }
+                
+                // Throughput 
+                if(ciclosfcfs !=0){
+                    throughputfcfs = (double)procesosfcfs / ciclosfcfs;
+                }
+                
+                if(ciclosrr !=0){
+                    throughputrr = (double)procesosrr / ciclosrr;
+                }
+                
+                if(ciclossjf !=0){
+                    throughputsjf = (double)procesossjf / ciclossjf;
+                }
+                
+                if(ciclossrt !=0){
+                    throughputsrt = (double)procesossrt / ciclossrt;
+                }
+                
+                if(cicloshrrn !=0){
+                    throughputhrrn = (double)procesoshrrn / cicloshrrn;
+                }
+                
+                if(clockomg !=0){
+                    throughputgeneral = (double) procesostotales / clockomg;  
+                    System.out.println();
                 }
                 });
             }
