@@ -27,6 +27,7 @@ public class Process {
     private int baseMemoryAddress;  // Dirección base en memoria del proceso
     private int blockedStartTime; // Ciclo en el que el proceso fue bloqueado
     private int counter; // Cuantos número de ciclos ejecutados desde el último bloqueo.
+    private int arrivalTime = 0;  // Inicializa en 0 por defecto
 
 
 
@@ -45,6 +46,7 @@ public class Process {
         this.programCounter = 0;
         this.memoryAddressRegister = baseMemoryAddress;  // Inicializar MAR con la dirección base
         this.baseMemoryAddress = baseMemoryAddress;  // Guardar la dirección base del proceso
+        
         
     }
 
@@ -187,6 +189,15 @@ public void setBlockedStartTime(int blockedStartTime) {
     else {
         return "I/O-Bound";
     }}
+    
+    // Métodos getter y setter
+public int getArrivalTime() {
+    return arrivalTime;
+}
+
+public void setArrivalTime(int arrivalTime) {
+    this.arrivalTime = arrivalTime;
+}
 }
 
 

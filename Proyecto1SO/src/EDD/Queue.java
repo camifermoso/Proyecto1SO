@@ -176,6 +176,45 @@ public class Queue {
         }
         return result.toString();
     }
+    
+    public void remove(Process target) {
+    if (isEmpty()) {
+        System.out.println("[ERROR] Intento de eliminar de una cola vacía.");
+        return;
+    }
+
+    Nodo current = head;
+    Nodo previous = null;
+
+    while (current != null) {
+        if (current.getElement() instanceof Process) {
+            Process p = (Process) current.getElement();
+            if (p.equals(target)) { // Se encontró el proceso a eliminar
+                if (previous == null) { 
+                    // Si es el primer nodo, mover la cabeza
+                    head = current.getNext();
+                    if (head == null) { 
+                        tail = null; // Si la cola queda vacía, ajustar tail
+                    }
+                } else {
+                    // Si es un nodo intermedio o final
+                    previous.setNext(current.getNext());
+                    if (current.getNext() == null) { 
+                        tail = previous; // Si era el último, ajustar tail
+                    }
+                }
+                size--;
+                System.out.println("[INFO] Proceso eliminado de la cola: " + p.getName());
+                return;
+            }
+        }
+        previous = current;
+        current = current.getNext();
+    }
+
+    System.out.println("[ERROR] Proceso no encontrado en la cola.");
+}
+
 
     
 

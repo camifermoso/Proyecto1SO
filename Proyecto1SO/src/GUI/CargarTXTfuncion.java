@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import static GUI.Simulacion.clock;
 import OBJECTS.Process;
 import OBJECTS.Scheduler;
 import javax.swing.*;
@@ -67,7 +68,7 @@ public class CargarTXTfuncion {
                     );
 
                     // Agregar el proceso a la cola de listos
-                    Simulacion.scheduler.addProcess(nuevoProceso);
+                    Simulacion.scheduler.addProcess(nuevoProceso, clock.getCurrentCycle());
 
                 }
 

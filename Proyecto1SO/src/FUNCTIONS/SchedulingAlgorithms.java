@@ -142,28 +142,39 @@ public static Process SPN(Queue readyQueue) {
 
     // Highest Response Ratio Next (HRRN)
     public static Process HRRN(Queue readyQueue, int currentTime) {
-        LinkedList tempList = new LinkedList();
-        while (!readyQueue.isEmpty()) {
-            tempList.addLast(readyQueue.dequeue());
+    if (readyQueue.isEmpty()) return null;
+
+    Nodo highestRRNode = null;
+    Process highestRRProcess = null;
+    double maxResponseRatio = -1;
+
+    // Recorremos la cola de listos
+    Nodo current = readyQueue.getHead();
+    while (current != null) {
+        Process p = (Process) current.getElement();
+        
+        int waitTime = currentTime - p.getArrivalTime();
+        int executionTime = p.getTotalInstructions();
+        
+        double responseRatio = (double) (waitTime + executionTime) / executionTime;
+        
+        if (responseRatio > maxResponseRatio) {
+            maxResponseRatio = responseRatio;
+            highestRRProcess = p;
+            highestRRNode = current;
         }
         
-        Process highestRatioProcess = null;
-        double highestRatio = -1;
-        Nodo current = tempList.getHead();
-        while (current != null) {
-            Process p = (Process) current.getElement();
-            double responseRatio = (currentTime - p.getProcessID() + p.getTotalInstructions()) / (double) p.getTotalInstructions();
-            if (responseRatio > highestRatio) {
-                highestRatio = responseRatio;
-                highestRatioProcess = p;
-            }
-            current = current.getNext();
-        }
-        
-        tempList.removeFirst();
-        while (!tempList.isEmpty()) {
-            readyQueue.enqueue(tempList.removeFirst());
-        }
-        return highestRatioProcess;
+        current = current.getNext();
     }
+
+    // Eliminamos el proceso de la cola de listos
+    if (highestRRNode != null) {
+        readyQueue.remove(highestRRProcess);
+    }
+
+    return highestRRProcess;
+}
+
+
+
 }
