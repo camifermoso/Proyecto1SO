@@ -34,14 +34,7 @@ public class SchedulingAlgorithms {
 
     // Round Robin
     public static Process RoundRobin(Queue readyQueue, int quantum) {
-        if (readyQueue.isEmpty()) return null;
-        Process process = (Process) readyQueue.dequeue();
-        
-        if (process.getExecutedInstructions() + quantum < process.getTotalInstructions()) {
-            process.setProgramCounter(process.getProgramCounter() + quantum);
-            readyQueue.enqueue(process); // Se reenvía a la cola
-        }
-        return process;
+        //hacer
     }
 
     // Shortest Process Next (SPN)
