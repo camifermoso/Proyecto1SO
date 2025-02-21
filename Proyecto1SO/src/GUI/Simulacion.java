@@ -3,6 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package GUI;
+import static GUI.Estadisticas.ciclosfcfs;
+import static GUI.Estadisticas.cicloshrrn;
+import static GUI.Estadisticas.ciclosrr;
+import static GUI.Estadisticas.ciclossjf;
+import static GUI.Estadisticas.ciclossrt;
+import static GUI.Estadisticas.clockomg;
+import static GUI.Estadisticas.cpuboundfcfs;
+import static GUI.Estadisticas.cpuboundhrrn;
+import static GUI.Estadisticas.cpuboundrr;
+import static GUI.Estadisticas.cpuboundsjf;
+import static GUI.Estadisticas.cpuboundsrt;
+import static GUI.Estadisticas.procesosfcfs;
+import static GUI.Estadisticas.procesoshrrn;
+import static GUI.Estadisticas.procesosrr;
+import static GUI.Estadisticas.procesossjf;
+import static GUI.Estadisticas.procesossrt;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -73,15 +89,31 @@ public class Simulacion extends javax.swing.JFrame {
                 SwingUtilities.invokeLater(() -> {
                     clockLabel.setText("CICLO DE RELOJ GLOBAL: " + clock.getCurrentCycle());
                     updateCPUsDisplay();
+                    
+                // Ciclos
+                clockomg++;
+                if ("FCFS".equals(scheduler.getAlgorithm())) {
+                 ciclosfcfs++;
+                } else if ("RoundRobin".equals(scheduler.getAlgorithm())) {
+                    ciclosrr++;
+                } else if ( "SJF".equals(scheduler.getAlgorithm())) {
+                    ciclossjf++;
+                } else if ("SRT".equals(scheduler.getAlgorithm())) {
+                    ciclossrt++;
+                } else if ("HRRN".equals(scheduler.getAlgorithm())) {
+                    cicloshrrn++;
+                }
                 });
             }
         }).start();
+        
     }
    
     public ExceptionHandler getExceptionHandler() {
     return exceptionHandler;
 }
-
+    
+    
     /**
      * Inicializa los elementos personalizados
      */
@@ -793,6 +825,7 @@ public void actualizarColaTerminados() {
 
     private void estadisticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadisticasActionPerformed
         FuncionesInterfaz.openEstadisticas();
+
         this.setVisible(false);
     }//GEN-LAST:event_estadisticasActionPerformed
 

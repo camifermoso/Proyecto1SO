@@ -55,12 +55,12 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="regresar">
           <Properties>
             <Property name="text" type="java.lang.String" value="REGRESAR"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="regresarActionPerformed"/>
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -148,21 +148,21 @@
             </Component>
             <Component class="javax.swing.JLabel" name="procesosIOBound">
               <Properties>
-                <Property name="text" type="java.lang.String" value="procesosIOBound"/>
+                <Property name="text" type="java.lang.String" value="procesosCPUBound"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="240" y="110" width="-1" height="-1"/>
+                  <AbsoluteConstraints x="240" y="70" width="-1" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
             <Component class="javax.swing.JLabel" name="procesosCPUBound">
               <Properties>
-                <Property name="text" type="java.lang.String" value="procesosCPUBound"/>
+                <Property name="text" type="java.lang.String" value="procesosIOBound"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="250" y="70" width="-1" height="20"/>
+                  <AbsoluteConstraints x="240" y="110" width="-1" height="20"/>
                 </Constraint>
               </Constraints>
             </Component>

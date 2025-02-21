@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import static GUI.Estadisticas.procesostotales;
+
 /**
  *
  * @author cristiandresgp
@@ -15,6 +17,11 @@ public class Graficos extends javax.swing.JFrame {
      */
     public Graficos() {
         initComponents();
+    }
+    
+    public void ayuda(){
+        System.out.println("holiiiiiii");
+        ayuda.setText(Integer.toString(procesostotales));
     }
 
     /**
@@ -29,6 +36,7 @@ public class Graficos extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        ayuda = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -44,6 +52,9 @@ public class Graficos extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 260, -1, -1));
+
+        ayuda.setText("hola");
+        jPanel1.add(ayuda, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 110, 70, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -99,6 +110,7 @@ public class Graficos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel ayuda;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
