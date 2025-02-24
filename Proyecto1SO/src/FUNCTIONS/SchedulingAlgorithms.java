@@ -32,13 +32,31 @@ public class SchedulingAlgorithms {
         return (Process) readyQueue.dequeue();
     }
 
-    // Round Robin
+    // Implementación corregida de Round Robin
     public static Process RoundRobin(Queue readyQueue, int quantum) {
-        //hacer
+        if (readyQueue.isEmpty()) return null;
+        
+        Process process = (Process) readyQueue.dequeue(); // Sacar el primer proceso de la cola
+        
+        if (process.getExecutedInstructions() < process.getTotalInstructions()) {
+            int remainingInstructions = process.getTotalInstructions() - process.getExecutedInstructions();
+            int executionTime = Math.min(remainingInstructions, quantum);
+            
+            // Ejecutar el proceso por el tiempo asignado (quantum o hasta que termine)
+            for (int i = 0; i < executionTime; i++) {
+                process.executeInstruction();
+            }
+            
+            // Si el proceso aún no ha terminado, se vuelve a encolar al final de la cola de listos
+            if (!process.isCompleted()) {
+                readyQueue.enqueue(process);
+            }
+        }
+        
+        return process; // Retorna el proceso que se ejecutó
     }
 
     // Shortest Process Next (SPN)
-    // Shortest Process Next (SPN) corregido
 public static Process SPN(Queue readyQueue) {
     if (readyQueue.isEmpty()) return null;
 

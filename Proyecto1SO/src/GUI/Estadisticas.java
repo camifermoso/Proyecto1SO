@@ -652,7 +652,9 @@ public void uuupdateStatisticsGUI() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void regresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarActionPerformed
-        FuncionesInterfaz.VolverMenu();
+        FuncionesInterfaz.VolverMenu();;
+
+        this.setVisible(false);
     }//GEN-LAST:event_regresarActionPerformed
 
     /**
